@@ -27,7 +27,7 @@ from dxskytap.restobject import RestMap, RestObject, RestAttribute
 
 class Note(RestObject):
     def __init__(self, connect, res, uid, intial_data):
-        RestObject.__init__(self, connect, "{}/notes/{}".format(res, uid),
+        RestObject.__init__(self, connect, "%s/notes/%s" % (res, uid),
             intial_data)
 
     uid = RestAttribute("id", readonly=True)
@@ -39,19 +39,19 @@ class Note(RestObject):
 class Notes(RestMap):
 
     def __init__(self, connect, res):
-        RestMap.__init__(self, connect, "{}/notes".format(res),
+        RestMap.__init__(self, connect, "%s/notes" % (res),
             lambda conn, data: Note(conn, res, data['id'], data))
         self._base_resource = res
 
     def create_note(self, text):
-        result = self._connect.post("{}/notes".format(self._base_resource),
+        result = self._connect.post("%s/notes" % (self._base_resource),
             body={'text': text})
         return Note(self._connect, self._base_resource, result['id'], result)
 
 
 class Label(RestObject):
     def __init__(self, connect, res, uid, intial_data):
-        RestObject.__init__(self, connect, "{}/labels/{}".format(res, uid),
+        RestObject.__init__(self, connect, "%s/labels/%s" % (res, uid),
             intial_data)
 
     uid = RestAttribute("id", readonly=True)
@@ -67,7 +67,7 @@ class Labels(RestMap):
        'LicenseTag', 'RegionNameTag', 'SecurityTag', 'VersionTag']
 
     def __init__(self, connect, res, vmtype):
-        RestMap.__init__(self, connect, "{}/labels".format(res),
+        RestMap.__init__(self, connect, "%s/labels" % (res),
             lambda conn, data: Note(conn, res, data['id'], data))
         self._base_resource = res
         self._vm_type = vmtype
@@ -83,7 +83,7 @@ class Labels(RestMap):
             'object_type': self._vm_type,
             'tag_type' : tagtype,
             'text': text }
-        result = self._connect.post("{}/labels".format(self._base_resource),
+        result = self._connect.post("%s/labels" % (self._base_resource),
             body=body)
         return Label(self._connect, self._base_resource, result['id'], result)
 
@@ -91,7 +91,7 @@ class Labels(RestMap):
 class Credential(RestObject):
     def __init__(self, connect, res, uid, intial_data):
         RestObject.__init__(self, connect,
-            "{}/credentials/{}".format(res, uid), intial_data)
+            "%s/credentials/%s" % (res, uid), intial_data)
 
     uid = RestAttribute("id", readonly=True)
     text = RestAttribute("text")
@@ -100,12 +100,12 @@ class Credential(RestObject):
 class Credentials(RestMap):
 
     def __init__(self, connect, res):
-        RestMap.__init__(self, connect, "{}/credentials".format(res),
+        RestMap.__init__(self, connect, "%s/credentials" % (res),
             lambda conn, data: Note(conn, res, data['id'], data))
         self._base_resource = res
 
     def create_credential(self, text):
-        result = self._connect.post("{}/credentials".format(
+        result = self._connect.post("%s/credentials" % (
             self._base_resource), body={'text': text})
         return Credential(self._connect, self._base_resource, result['id'],
             result)

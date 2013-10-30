@@ -32,7 +32,7 @@ from dxskytap.publish_sets import PublishSet
 class VirtualMachine(RestObject):
     
     def __init__(self, connect, base_resource, uid, initial_data):
-        res = "{}/vms/{}".format(base_resource, uid, initial_data)
+        res = "%s/vms/%s" % (base_resource, uid)
         RestObject.__init__(self, connect, res, initial_data)
     
     runstate = RestAttribute('runstate')
@@ -82,5 +82,5 @@ class VirtualMachine(RestObject):
 class VirtualMachines(RestMap):
 
     def __init__(self, connect, resource):
-        RestMap.__init__(self, connect, "{}/vms".format(resource),
+        RestMap.__init__(self, connect, "%s/vms" % (resource),
             lambda conn, data: VirtualMachine(conn, resource, data['id'], data))

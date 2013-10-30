@@ -17,7 +17,7 @@ class DeleteConfiguration(unittest.TestCase):
         self.configurations = self.root.configurations()
 
     def test_deleteConfiguration(self):
-        print('in test_deleteConfiguration({})'.format(self))
+        print('in test_deleteConfiguration(%s)' % (self))
         configurationName = sys.argv[1]
         self.assertTrue(len(configurationName) > 0, "Name of configuration must be passed in")
         
@@ -26,7 +26,7 @@ class DeleteConfiguration(unittest.TestCase):
         configs = self.configurations.get_by_name(configurationName)
         if len(configs) > 0:
             for config in configs:
-                print("Deleting configuration {}".format(config))
+                print("Deleting configuration %s" % (config))
                 config.delete()
 
 def suite():

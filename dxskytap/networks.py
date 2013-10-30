@@ -31,7 +31,7 @@ from dxskytap.attached_vpns import AttachedVPN
 class VirtualNetwork(RestObject):
     
     def __init__(self, connect, base_resource, uid, intial_data):
-        res = "{}/networks/{}".format(base_resource, uid)
+        res = "%s/networks/%s" % (base_resource, uid)
         RestObject.__init__(self, connect, res, intial_data)
         
     uid = RestAttribute('id', readonly=True)
@@ -68,5 +68,5 @@ class VirtualNetwork(RestObject):
 class VirtualNetworks(RestMap):
 
     def __init__(self, connect, resource):
-        RestMap.__init__(self, connect, "{}/networks".format(resource),
+        RestMap.__init__(self, connect, "%s/networks" % (resource),
             lambda conn, data: VirtualNetwork(conn, resource, data['id'], data))

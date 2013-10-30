@@ -55,7 +55,7 @@ class Asset(RestObject):
             initialData  - A dict containing a partial cache of the name/value 
                 attributes for this asset.
         '''
-        RestObject.__init__(self, connect, "assets/{}".format(uid),
+        RestObject.__init__(self, connect, "assets/%s" % (uid),
             initial_data, False)
     
     uid = RestAttribute("id", readonly=True)

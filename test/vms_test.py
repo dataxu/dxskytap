@@ -12,8 +12,8 @@ class TestVMs(unittest.TestCase):
     def setUp(self):
         self.root = Skytap()
         """configurations = Configurations(username, password)"""
-        template = self.root.templates()['286541']
-        self.assertTrue(template is not None, "Unable to get template 286541")
+        template = self.root.templates()['294385']
+        self.assertTrue(template is not None, "Unable to get template 294385")
         self.config = template.create_configuration()
         self.config.wait_for()
 

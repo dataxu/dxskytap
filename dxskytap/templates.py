@@ -46,7 +46,7 @@ class Template(AssignableObject):
     """
     
     def __init__(self, connect, uid, intial_data, configuration_cls):
-        AssignableObject.__init__(self, connect, "templates/{}".format(uid),
+        AssignableObject.__init__(self, connect, "templates/%s" % (uid),
             intial_data, "templates")
         self._configuration_cls = configuration_cls
         

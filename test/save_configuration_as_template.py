@@ -19,7 +19,7 @@ class SaveConfigurationAsTemplate(unittest.TestCase):
         self.templates = self.root.templates()
 
     def test_saveConfigurationAsTemplate(self):
-        print('in saveConfigurationAsTemplate({})'.format(self))
+        print('in saveConfigurationAsTemplate(%s)' % (self))
         configurationName = sys.argv[1]
         self.assertTrue(len(configurationName) > 1, "Configuration name must be passed in")
         templateName = configurationName + " - Running Components"
@@ -29,21 +29,21 @@ class SaveConfigurationAsTemplate(unittest.TestCase):
         templates = self.templates.get_by_name(templateName)
         if len(templates) > 0:
             for template in templates:
-                print("Deleting template {}".format(template))
+                print("Deleting template %s" % (template))
                 template.delete()
         
         """ Save the existing configuration as a template """
         print("Save the existing configuration as a template")
         self.configurations.refresh()
         configs = self.configurations.get_by_name(configurationName)
-        self.assertTrue(len(configs) == 1, "Should only be one '{}' configuration. Found {} configuration(s)".format(configurationName, len(configs)))
+        self.assertTrue(len(configs) == 1, "Should only be one '%s' configuration. Found {1} configuration(s)" % (configurationName, len(configs)))
         config = configs[0]
         template = config.createTemplate()
         self.assertTrue(template is not None, "Unable to create new template")
         template.name = templateName
         self.templates.refresh()
         templates = self.templates.get_by_name(templateName)
-        self.assertTrue(len(templates) == 1, "Should only be one '{}' template. Found {} template(s)".format(templateName, len(templates)))
+        self.assertTrue(len(templates) == 1, "Should only be one '%s' template. Found {1} template(s)" % (templateName, len(templates)))
 
         """ Wait for the configuration to not be busy """
         print("Wait for the configuration to not be busy")
@@ -51,7 +51,7 @@ class SaveConfigurationAsTemplate(unittest.TestCase):
         self.configurations.refresh()
         config = self.configurations.getByName(configurationName)[0]
         while ((config.runstate == 'busy') & (iterations < 10)):
-            print("'{}' {}. Sleep for 30 seconds".format(configurationName, config.runstate))
+            print("'%s' %s. Sleep for 30 seconds" % (configurationName, config.runstate))
             time.sleep(30)
             self.configurations.refresh()
             config = self.configurations.getByName(configurationName)[0]

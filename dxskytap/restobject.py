@@ -205,7 +205,7 @@ class RestAttribute(object):
             else:
                 obj.set_attribute(self._attr_name, self._setfunc(val))
         else:
-            raise AttributeError, "attribute {} is readonly".format(
+            raise AttributeError, "attribute %s is readonly" % (
                 self._attr_name)
         
     def __delete__(self, obj):
@@ -213,7 +213,7 @@ class RestAttribute(object):
         if(self._readonly == False):
             obj.set_attribute(self._attr_name, '')
         else:
-            raise AttributeError, "attribute {} is readonly".format(
+            raise AttributeError, "attribute %s is readonly" % (
                 self._attr_name)
 
 class RestBoolAttribute(RestAttribute):

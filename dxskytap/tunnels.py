@@ -27,7 +27,7 @@ from dxskytap.restobject import RestMap, RestObject, RestAttribute
 
 class Tunnel(RestObject):
     def __init__(self, connect, uid, initial_data):
-        RestObject.__init__(self, connect, "/tunnels/{}".format(uid), 
+        RestObject.__init__(self, connect, "/tunnels/%s" % (uid), 
             initial_data)
     
     uid = RestAttribute("id", readonly=True)

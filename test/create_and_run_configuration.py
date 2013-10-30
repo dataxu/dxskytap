@@ -20,34 +20,34 @@ class CreateAndRunConfiguration(unittest.TestCase):
         self.templates = self.root.templates()
 
     def test_createAndRunConfiguration(self):
-        print('in test_createAndRunConfiguration({})'.format(self))
+        print('in test_createAndRunConfiguration(%s)' % (self))
         template_name = sys.argv[1]
         self.assertTrue(len(template_name) > 1, "Template name must be passed in")
-        print("Template name '{}'".format(template_name))
+        print("Template name '%s'" % (template_name))
         driver_name = sys.argv[2]
         self.assertTrue(len(driver_name) > 1, "Test driver name must be passed in")
-        print("Test driver name '{}'".format(driver_name))
+        print("Test driver name '%s'" % (driver_name))
         user_name = sys.argv[3]
         if len(user_name) > 1:
             configuration_name = user_name + ' ' + template_name
         else:
             configuration_name = template_name
-        print("Configuration name '{}'".format(configuration_name))
+        print("Configuration name '%s'" % (configuration_name))
             
         """ Delete the existing configuration """
         print("Delete the existing configuration")
         configs = self.configurations.get_by_name(configuration_name)
         if len(configs) > 0:
             for config in configs:
-                print("Deleting configuration {}".format(config))
+                print("Deleting configuration %s" % (config))
                 config.delete()
         
         """ Create configuration from template """
-        print("Creating configuration '{}' from template '{}'".format(configuration_name, template_name))
+        print("Creating configuration '%s' from template '%s'" % (configuration_name, template_name))
         self.templates.refresh()
         templates = self.templates.get_by_name(template_name)
-        self.assertTrue(templates is not None, "Unable to get template {}".format(template_name))
-        self.assertTrue(len(templates) == 1, "Should only be one '{}' template. Found {} template(s)".format(template_name, len(templates)))
+        self.assertTrue(templates is not None, "Unable to get template %s" % (template_name))
+        self.assertTrue(len(templates) == 1, "Should only be one '%s' template. Found %s template(s)" % (template_name, len(templates)))
         config = templates[0].create_configuration()
         self.assertTrue(config is not None, "Unable to create new configuration")
         config.name = configuration_name
@@ -58,7 +58,7 @@ class CreateAndRunConfiguration(unittest.TestCase):
         time.sleep(30)
         config.runstate = 'running'
         while ((config.runstate != 'running') & (iterations < 10)):
-            print("'{}' {}. Sleep for 30 seconds".format(configuration_name, config.runstate))
+            print("'%s' %s. Sleep for 30 seconds" % (configuration_name, config.runstate))
             time.sleep(30)
             self.configurations.refresh()
             config = self.configurations.get_by_name(configuration_name)[0]

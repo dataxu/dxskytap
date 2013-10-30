@@ -15,8 +15,8 @@ class TestConfigurations(unittest.TestCase):
         self.root = Skytap()
         """configurations = Configurations(username, password)"""
         self.configurations = self.root.configurations()
-        template = self.root.templates()['286541']
-        self.assertTrue(template is not None, "Unable to get template 286541")
+        template = self.root.templates()['294385']
+        self.assertTrue(template is not None, "Unable to get template 294385")
         config = template.create_configuration()
         config.wait_for()
         config.name = 'test config'
@@ -35,7 +35,7 @@ class TestConfigurations(unittest.TestCase):
     
     def test_getConfigurationByName(self):
         result_list = self.configurations.get_by_name('test config')
-        self.assertTrue(len(result_list) == 1, "Received {} configs from lookup of 'test config'".format(len(result_list)))
+        self.assertTrue(len(result_list) == 1, "Received %s configs from lookup of 'test config'" % (len(result_list)))
         count = 0
         for r in result_list:
             self.assertTrue(isinstance(r, Configuration), "Item is not a configuration")
@@ -43,8 +43,8 @@ class TestConfigurations(unittest.TestCase):
         self.assertTrue(count == 1, "Didn't traverse any configurations")
     
     def test_startConfiguration(self):
-        template = self.root.templates()['286541']
-        self.assertTrue(template is not None, "Unable to get template 286541")
+        template = self.root.templates()['294385']
+        self.assertTrue(template is not None, "Unable to get template 294385")
         config1 = template.create_configuration(['2012086'])
         config1.wait_for() 
         newState = 'running'
@@ -52,12 +52,12 @@ class TestConfigurations(unittest.TestCase):
         self.assertTrue( config1.runstate != newState, "Verify state doesn't change immediately")
         config1.wait_for()
         config2 = self.configurations[config1.uid]
-        self.assertTrue(config2.runstate == newState, "Configuration state not changed to {}".format(newState))
+        self.assertTrue(config2.runstate == newState, "Configuration state not changed to %s" % (newState))
         config1.delete()
 
     def test_createAndDeleteConfiguration(self):
-        template = self.root.templates()['286541']
-        self.assertTrue(template is not None, "Unable to get template 286541")
+        template = self.root.templates()['294385']
+        self.assertTrue(template is not None, "Unable to get template 294385")
         config = template.create_configuration()
         uid = config.uid
         self.assertTrue(config is not None, "Unable to create new config")
@@ -70,8 +70,8 @@ class TestConfigurations(unittest.TestCase):
         self.assertTrue(c2 is None, "Deleted config is still searchable")
 
     def test_createConfigurationAndMergeTemplate(self):
-        template = self.root.templates()['286541']
-        self.assertTrue(template is not None, "Unable to get template 286541")
+        template = self.root.templates()['294385']
+        self.assertTrue(template is not None, "Unable to get template 294385")
         config = template.create_configuration()
         self.assertEqual(len(config.vms().values()), 1, "Config doesn't have right number of vms before merging template in")
         self.assertTrue(config is not None, "Unable to create new config")

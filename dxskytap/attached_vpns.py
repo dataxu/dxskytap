@@ -30,7 +30,7 @@ from dxskytap.vpns import VPN
 class AttachedVPN(RestObject):
     
     def __init__(self, connect, base_resource, vpn_id, intial_data):
-        res = "{}/vpns/{}".format(base_resource, vpn_id)
+        res = "%s/vpns/%s" % (base_resource, vpn_id)
         RestObject.__init__(self, connect, res, intial_data, is_full=True)
 
     uid = RestAttribute('id', readonly=True)
@@ -47,7 +47,7 @@ class AttachedVPN(RestObject):
 
     def vpn(self):
         data = self.alldata()['vpn']
-        'vpns/{}'.format(self.vpn_id())
+        'vpns/%s' % (self.vpn_id())
         return VPN(self._connect, self.vpn_id(), data)
 
     def detach(self):
@@ -57,5 +57,5 @@ class AttachedVPN(RestObject):
 class AttachedVPNs(RestMap):
 
     def __init__(self, connect, res):
-        RestMap.__init__(self, connect, "{}/vpns".format(res),
+        RestMap.__init__(self, connect, "%s/vpns" % (res),
             lambda conn, data: AttachedVPN(conn, res, data['vpn']['id'], data))

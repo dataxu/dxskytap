@@ -53,7 +53,7 @@ class Project (RestObject):
                 This partial data is obtained from the Projects object when
                 it queries skytap for a list of projects.
         """
-        RestObject.__init__(self, connect, "projects/{}".format(uid),
+        RestObject.__init__(self, connect, "projects/%s" % (uid),
             initial_data)
         
     uid = RestAttribute('id', readonly=True)

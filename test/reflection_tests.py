@@ -62,7 +62,7 @@ def testAPI():
     while not objs.empty():
         (o, p) = objs.get()
         logger.info(" **********************************")
-        logger.info(" * OBJECT: {}".format(type(o).__name__))
+        logger.info(" * OBJECT: %s" % (type(o).__name__))
         logger.info(" **********************************")
         for attr in dir(o):
             if not pattern.match(attr) and not attr in ignoreAttrs:

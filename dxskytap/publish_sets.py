@@ -47,7 +47,7 @@ class PublishSetVM(RestObject):
 class PublishSet(RestObject):
     def __init__(self, connect, res, uid, intial_data, vm_cls):
         RestObject.__init__(self, connect, 
-            "{}/publish_sets/{}".format(res, uid), intial_data)
+            "%s/publish_sets/%s" % (res, uid), intial_data)
         self._vm_cls = vm_cls
         
     uid = RestAttribute("id", readonly=True)
@@ -67,7 +67,7 @@ class PublishSet(RestObject):
 class PublishSets(RestMap):
 
     def __init__(self, connect, resource, vm_class):
-        RestMap.__init__(self, connect, "{}/publish_sets".format(resource),
+        RestMap.__init__(self, connect, "%s/publish_sets" % (resource),
             lambda conn, data: PublishSet(conn, resource, data['id'], data,
                 vm_class))
         self._base_resource = resource

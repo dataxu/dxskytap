@@ -66,7 +66,7 @@ class Configuration(AssignableObject):
                 problem, which is explained here.
         """
         AssignableObject.__init__(self, connect,
-            "configurations/{}".format(uid),
+            "configurations/%s" % (uid),
             initial_data, "configurations")
         self._template_cls = template_cls
         

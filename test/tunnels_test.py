@@ -13,7 +13,7 @@ class TestTunnels(unittest.TestCase):
     def setUp(self):
         self.root = Skytap()
         self.configurations = self.root.configurations()
-        template = self.root.templates()['286541']
+        template = self.root.templates()['294385']
         self.configuration1 = template.create_configuration()
         self.configuration1.wait_for()
         self.configuration1.name = "Source Config"

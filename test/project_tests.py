@@ -8,8 +8,8 @@ import time
 class TestProjects(unittest.TestCase):
     def setUp(self):
         self.root = Skytap()
-        template = self.root.templates()['286541']
-        self.assertTrue(template is not None, "Unable to get template 286541")
+        template = self.root.templates()['294385']
+        self.assertTrue(template is not None, "Unable to get template 294385")
         self.config = template.create_configuration()
         self.config.wait_for()
         self.template = self.config.create_template()
@@ -17,7 +17,7 @@ class TestProjects(unittest.TestCase):
 
     def test_createDeleteProject(self):
         new_project = self.root.projects().create_project('test_project_1')
-        self.assertIsInstance(new_project, Project)
+        self.assertTrue(isinstance(new_project, Project))
         new_project.delete()
 
     def test_assignTemplate(self):
@@ -26,7 +26,7 @@ class TestProjects(unittest.TestCase):
         templates = new_project.templates()
         temp = filter(lambda x: x.uid == self.template.uid, templates)
         self.assertEquals(len(temp), 1)
-        self.assertIsInstance(temp[0], Template)
+        self.assertTrue(isinstance(temp[0], Template))
         new_project.delete()
 
     def test_assignConfiguration(self):
@@ -35,7 +35,7 @@ class TestProjects(unittest.TestCase):
         configurations = new_project.configurations()
         temp = filter(lambda x: x.uid == self.config.uid, configurations)
         self.assertEquals(len(temp), 1)
-        self.assertIsInstance(temp[0], Configuration)
+        self.assertTrue(isinstance(temp[0], Configuration))
         new_project.delete()
 
     def tearDown(self):

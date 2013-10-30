@@ -23,7 +23,11 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import json as simplejson
+try:
+    import json as simplejson
+except ImportError:
+    import simplejson
+
 from base64 import b64encode
 import httplib2
 import urlparse
@@ -103,9 +107,9 @@ class Connect(object):
         """
         if headers is None:
             headers = {}
-        encoded_auth = b64encode('{}:{}'.format(self.username, self.password))
+        encoded_auth = b64encode('%s:%s' % (self.username, self.password))
         headers['User-Agent'] = 'Basic Agent'
-        headers['Authorization'] = 'Basic {}'.format(encoded_auth)
+        headers['Authorization'] = 'Basic %s' % (encoded_auth)
         
         if method in ["post", "put"]:
             headers['Content-Type'] = 'application/json'
@@ -144,8 +148,10 @@ class Connect(object):
         """
         for (key, val) in headers.items():
             self.logger.debug("%s_header: %s: %s" %(msg, key, val))
-        body_txt = re.sub(r"\\[nbrt]", 
-            lambda x: "\\%s" % (str(x.group(0))), body)
+        if body is None:
+            body_txt =  ''
+        else:
+            body_txt = re.escape(body)
         self.logger.debug("%s_body: %s" % (msg, body_txt))
 
     def _perform_request(self, url, method, body, headers):

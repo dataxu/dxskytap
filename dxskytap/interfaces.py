@@ -28,7 +28,7 @@ from dxskytap.restobject import RestMap, RestObject, RestAttribute
 class PublicIP(RestObject):
     
     def __init__(self, connect, base_resource, uid, initial_data):
-        res = "{}/public_ips/{}".format(base_resource, uid, initial_data)
+        res = "%s/public_ips/%s" %s (base_resource, uid)
         RestObject.__init__(self, connect, res, initial_data)
         
     uid = RestAttribute('id', readonly=True)
@@ -38,13 +38,13 @@ class PublicIP(RestObject):
 class PublicIPs(RestMap):
 
     def __init__(self, connect, resource):
-        RestMap.__init__(self, connect, "{}/public_ips".format(resource),
+        RestMap.__init__(self, connect, "%s/public_ips" % (resource),
             lambda conn, data: PublicIP(conn, resource, data, data))
         
 class PublishedService(RestObject):
     
     def __init__(self, connect, base_resource, uid, initial_data):
-        res = "{}/services/{}".format(base_resource, uid, initial_data)
+        res = "%s/services/%s" % (base_resource, uid)
         RestObject.__init__(self, connect, res, initial_data)
         
     uid = RestAttribute('id', readonly=True)
@@ -55,13 +55,13 @@ class PublishedService(RestObject):
 class PublishedServices(RestMap):
 
     def __init__(self, connect, resource):
-        RestMap.__init__(self, connect, "{}/services".format(resource),
+        RestMap.__init__(self, connect, "%s/services" % (resource),
             lambda conn, data: PublishedService(conn, resource, data['id'],
                 data))
 
 class Interface(RestObject):
     def __init__(self, connect, base_resource, uid, intial_data):
-        res = "{}/interfaces/{}".format(base_resource, uid)
+        res = "%s/interfaces/%s" % (base_resource, uid)
         RestObject.__init__(self, connect, res, intial_data)
     
     uid = RestAttribute("id", readonly=True)
@@ -90,5 +90,5 @@ class Interface(RestObject):
 class Interfaces(RestMap):
     
     def __init__(self, connect, resource):
-        RestMap.__init__(self, connect, "{}/interfaces".format(resource),
+        RestMap.__init__(self, connect, "%s/interfaces" % (resource),
             lambda conn, data: Interface(conn, resource, data['id'], data))

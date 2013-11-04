@@ -50,10 +50,28 @@ class AssignableObject(RestObject):
         self._obj_type = obj_type
         
     def reassign(self, user, project=None):
+        """
+        Reassign the user that owns this skytap resource.
+        Parameters
+            user - The skytap object for the user. Lookup the user in the
+                   skytap.users() dictionary.
+            project - Reassigning the owner will clear the projects this
+                   resource belongs to. You have to option of passing a
+                   single project that the resource will be added to.
+        """
         body = { 'owner':user.uid }
         if(project is not None):
             body['reassign_context'] = project.uid
         self.data = self._connect.put(self._resource, body=body)
 
     def add_to_project(self, project, role=None):
+        """
+        Add this resource to a Skytap project.
+        Parameters
+            project - The project object can be found in the skytap.projects()
+                      dictionary.
+            role - Optional parameter used when adding user or group object to
+                   a project. Valid values are 'viewer', 'participant', 
+                   'editor' or 'manager'.
+        """
         project.add(self, self._obj_type, role)

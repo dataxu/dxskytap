@@ -47,11 +47,25 @@ class RestBase(object):
         self._can_refresh = can_refresh
         
     def alldata(self):
+        """
+        Return all of the data extracted from the Skytap REST API for this
+        resource. The data is converted from its JSON format into a python
+        dictionary that is returned by this method.
+        """
         if not self._is_full:
             self.refresh()
         return self.data
     
     def refresh(self):
+        """
+        This method forces dxskytap to query the Skytap API and download
+        new data for this resource.
+
+        Note: Not all objects have a unique URL that can be called to refresh
+        the data. Nested objects that can only be accessed through its parent
+        object, will not be refreshed. This method is basically a NO OP for
+        nested objects. Call refresh on the parent to get new data.
+        """
         if(self._can_refresh):
             self.data = self._connect.get(self._resource)
             self._is_full = True
@@ -61,7 +75,30 @@ class RestObject(RestBase):
     
     def __init__(self, connect, resource, initial_data=None, can_delete=True,
         is_full=False, can_refresh=True, parent=None, parent_attr=None):
-
+        """
+        Construct a new Skytap Object that wraps REST API calls.
+        Parameters
+            connect - The Connect class that maintains the users session with
+                      Skytap.
+            resource - The relative path to this resource.
+            initial_data - Before creating the object information is known
+                about the Skytap resource. Information like id, name, etc ...
+                are passed to the construct rather than performing a HTTP GET
+                to pull the data from Skytap.
+            can_delete - Not all Skytap resources support deleting. If
+                can_delete is set to False, the delete() method will throw
+                an Exception when called.
+            is_full - If all data for an object is passed in initial_data
+                then set is_full to True.
+            can_refresh - Not all objects support pulling updated data
+                use HTTP GET to Skytap. Set can_refresh to False for these
+                resources.
+            parent - A reference to the parent object. This is used when
+                creating a nested object.
+            parent_attr - When referring to this nested object from the 
+                context of its parent, use this attribute name to get/set
+                the nest object value in the parent.
+        """
         RestBase.__init__(self, connect, resource, initial_data, is_full,
             can_refresh)
         self._active = True
@@ -70,12 +107,19 @@ class RestObject(RestBase):
         self._parent_attr = parent_attr
     
     def set_attribute(self, attr_name, attr_value):
+        """
+        When an RestAttribute has its value set this method is called
+        to execute a HTTP PUT to push the updated attribute to Skytap. 
+        """
         if(self._parent_attr is not None):
             attr_name = '%s[%s]' % (self._parent_attr, attr_name)
         args = {attr_name:attr_value}
         self.data = self._connect.put(self._resource, args)
 
     def delete(self):
+        """
+        Delete this Skytap resource.
+        """
         if(self._can_delete):
             self._active = False
             self._connect.delete(self._resource)
@@ -93,9 +137,17 @@ class RestObject(RestBase):
         self._is_full = True
         
     def is_active(self):
+        """
+        Returns active status of this Skytap resource. A resource will 
+        become inactive after calling delete() on this object.
+        """
         return self._active
 
 class RestMap(RestBase):
+    """
+    This class wraps a set of REST API calls for a collection of objects
+    that can be represented in python as a dictionary.
+    """
     
     def __init__(self, connect, resource, new_func, name_field='name'):
         RestBase.__init__(self, connect, resource)
@@ -109,42 +161,86 @@ class RestMap(RestBase):
         return None
    
     def __contains__(self, elem):
+        """
+        Check the uid of the passed object is in the collection
+        of all object ids for this collection. If the id is found,
+        then the object is contained in this dictionary.
+        """
         return elem.uid in self.alldata()
     
     def __setitem__(self, elem):
+        """
+        Replacing an object in this dictionary is not a supported 
+        operation. If the dictionary supports add new elements,
+        look for a create_* method on the class.
+        """
         raise TypeError('object is immutable') 
    
     def __delitem__(self, elem):
+        """
+        Deleting an object in this dictionary is not a supported
+        operation. Try using the delete method on the object itself.
+        """
         raise TypeError('object is immutable')
 
     def __len__(self):
+        """
+        Return the number of items that exist in this dictionary.
+        """
         return len(self.alldata())
     
     def __nonzero__(self):
+        """
+        Return True if this dictionary has a non-zero content.
+        """
         return bool(self.alldata())
     
     def iteritems(self):
+        """
+        Return an iterator for traversing the key/value tuples of this
+        dictionary.
+        """
         for item in self.alldata():
             yield (item['id'], self._new_func(self._connect, item))
     
     def itervalues(self):
+        """
+        Return an iterator for traversing the values of this dictionary.
+        """
         for item in self.alldata():
             yield self._new_func(self._connect, item)
 
     def iterkeys(self):
+        """
+        Return an iterator for traversing the keys of this dictionary.
+        """
         for item in self.alldata():
             yield item['id']
 
     def __iter__(self):
+        """
+        The default way to iterate a dictionary is to iterate
+        over the dictionary keys. This allows operations like
+        'key in restmap' to work.
+        """
         return self.iterkeys()
     
     def keys(self):
+        """
+        Return a list of all keys in the dictionary.
+        """
         return list(self.iterkeys())
               
     def items(self):
+        """
+        Return a list of all key,value tuples in the dictionary.
+        """
         return list(self.iteritems())
 
     def values(self):
+        """
+        Return a list of all values in the dictionary.
+        """
         return list(self.itervalues())
 
     def get_by_name(self, name):
@@ -217,6 +313,9 @@ class RestAttribute(object):
                 self._attr_name)
 
 class RestBoolAttribute(RestAttribute):
+    """
+    A python descriptor used to get/set Boolean attributes in a REST API.
+    """
     
     def __init__(self, attr_name, readonly=False):
         RestAttribute.__init__(self, attr_name, readonly, 

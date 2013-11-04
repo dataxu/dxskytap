@@ -23,11 +23,18 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from dxskytap.restobject import RestMap, RestObject, RestAttribute
+from dxskytap.restobject import RestObject, RestAttribute
 from dxskytap.restobject import RestBoolAttribute
 from dxskytap.vpns import VPN
 
 class AttachedVPN(RestObject):
+    """
+    This object represents the relationship between a Virtual Network
+    and a VPN. A Virtual Network can be attached to multiple VPNs, and
+    a VPN can have multiple Virtual Networks. This object represent a
+    single pair of a an Attached Virtual Network, and the VPN it is 
+    attached to.
+    """ 
     
     def __init__(self, connect, base_resource, vpn_id, intial_data):
         res = "%s/vpns/%s" % (base_resource, vpn_id)
@@ -37,25 +44,38 @@ class AttachedVPN(RestObject):
     connected = RestBoolAttribute('connected')
 
     def network_id(self):
+        """
+        Return the skytap id for the Virtual Network attached to the
+        VPN.
+        """
         return self.alldata()['network']['id']
 
     def configuration_id(self):
+        """
+        Every virtual network belongs to a Skytap configuration. This
+        method returns the id of the configuration that the attached
+        virtual network belongs to.
+        """
         return self.alldata()['network']['configuration_id']
 
     def vpn_id(self):
+        """
+        Return the id for the attached VPN.
+        """
         return self.alldata()['vpn']['id']
 
     def vpn(self):
+        """
+        Return the VPN object the virtual network is attached to.
+        """
         data = self.alldata()['vpn']
         'vpns/%s' % (self.vpn_id())
         return VPN(self._connect, self.vpn_id(), data)
 
     def detach(self):
+        """
+        Detach the virtual network from the VPN. This method is
+        equivalent to calling delete() on this object.
+        """
         return self.delete()
 
-
-class AttachedVPNs(RestMap):
-
-    def __init__(self, connect, res):
-        RestMap.__init__(self, connect, "%s/vpns" % (res),
-            lambda conn, data: AttachedVPN(conn, res, data['vpn']['id'], data))

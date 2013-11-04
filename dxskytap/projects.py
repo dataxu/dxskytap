@@ -23,6 +23,14 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+"""
+Classes:
+   Project - a Skytap Project used to share configurations, templates and 
+      assets used by a group of users for a specific project.
+   Projects - a python dictionary of all Skytap projects the user has access
+       to.
+"""
+
 from dxskytap.restobject import RestMap, RestObject
 from dxskytap.restobject import RestAttribute, RestBoolAttribute
 from dxskytap.configurations import Configuration
@@ -81,6 +89,11 @@ class Project (RestObject):
             for data in results]
 
     def add(self, obj, obj_type, role=None):
+        """
+        :obj: Skytap Resource to be added to the project
+        :obj_type: configurations, templates, assets, group, or users
+        :role: viewer, participant, editor or manager
+        """
         args = {} 
         if role is not None: 
             args['role'] = str(role)

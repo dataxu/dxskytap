@@ -23,6 +23,18 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+'''
+Provide a HTTP Connection to the Skytap REST API.
+
+Classes:
+ - Connect
+
+Exceptions:
+ - SkytapException
+ - TimeoutException
+ - NoResponseException
+'''
+
 try:
     import json as simplejson
 except ImportError:
@@ -66,6 +78,8 @@ class Connect(object):
 
     def __init__(self, url, ca_certs, username, password):
         """
+        Construct a HTTP Connection class to the Skytap REST API.
+
         :url: REST url to access
         :ca_certs: certificates used for authentication
         :username: authenticating username

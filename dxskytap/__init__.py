@@ -23,6 +23,14 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+'''
+The dxskytap module is a library that wraps the Skytap REST API. Dxskytap
+makes it easier for users to develop python applications for test automation.
+
+Classes:
+ - Skytap
+'''
+
 from dxskytap.assets import Assets
 from dxskytap.users import Users
 from dxskytap.configurations import Configurations, Configuration
@@ -48,7 +56,7 @@ class Skytap(object):
     skytap = dxskytap.Skytap()
     
     Once created all objects and functions in the Skytap API are accessible
-    throught the skytap object.
+    through the skytap object.
     '''
 
     def __init__(self, username=None, password=None):

@@ -26,6 +26,10 @@
 from dxskytap.restobject import RestMap, RestObject, RestAttribute
 
 class Tunnel(RestObject):
+    """
+    A network tunnel created by connecting two virtual skytap networks
+    together. Note: the networks must use non-overlaping subnets.
+    """
     def __init__(self, connect, uid, initial_data):
         RestObject.__init__(self, connect, "/tunnels/%s" % (uid), 
             initial_data)
@@ -34,12 +38,23 @@ class Tunnel(RestObject):
     status = RestAttribute("status", readonly=True)
     
     def source_network(self):
+        """
+        Returns the network id for the source network in the tunnel.
+        """
         return self.alldata()["source_network"]["id"]
 
     def target_network(self):
+        """
+        Returns the network id for the target network in the tunnel.
+        """
         return self.alldata()["target_network"]["id"]
 
     def check_state(self, states=None):
+        """
+        Return a boolean value yes or no. The tunnel is in one of the 
+        states passed in states argument. If states is None, then check
+        for any state except 'busy'.
+        """
         if states is None:
             return self.status != 'busy'
         elif self.status in states:
@@ -48,12 +63,22 @@ class Tunnel(RestObject):
             return False
     
 class Tunnels(RestMap):
+    """
+    A python dictionary of all the network tunnels in Skytap the user can
+    access. The dictionary uses the Tunnel ID value for its key.
+    """
 
     def __init__(self, connect):
         RestMap.__init__(self, connect, "tunnels",
             lambda conn, data: Tunnel(conn, data['id'], data))
 
     def create_tunnel(self, source_network_id, target_network_id):
+        """
+        Create a connection between two virtual networks in Skytap.
+        The two networks must have non-overlaping subnets, and the
+        target network must have the 'tunnelable' attribute set to 
+        'True'.
+        """
         body = {'source_network_id': str(source_network_id),
                 'target_network_id': str(target_network_id)}
         result = self._connect.post("tunnels", body)

@@ -45,7 +45,7 @@ class TestConfigurations(unittest.TestCase):
     def test_startConfiguration(self):
         template = self.root.templates()['294385']
         self.assertTrue(template is not None, "Unable to get template 294385")
-        config1 = template.create_configuration(['2012086'])
+        config1 = template.create_configuration()
         config1.wait_for() 
         newState = 'running'
         config1.runstate = newState

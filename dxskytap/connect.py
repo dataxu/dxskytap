@@ -45,7 +45,6 @@ import httplib2
 import urlparse
 import urllib
 import signal
-import os
 import re
 import logging
 
@@ -74,9 +73,8 @@ class Connect(object):
     Class for managing the core REST HTTP Connection.
     """
 
-    REQUEST_TIMEOUT = os.getenv('DXSKYTAP_REQUEST_TIMEOUT', 300)
 
-    def __init__(self, url, ca_certs, username, password):
+    def __init__(self, url, ca_certs, username, password, request_timeout):
         """
         Construct a HTTP Connection class to the Skytap REST API.
 
@@ -84,6 +82,8 @@ class Connect(object):
         :ca_certs: certificates used for authentication
         :username: authenticating username
         :password: username's password
+        :request_timeout: throw a TimeoutException if Skytap doesn't respond
+            within this window.
         """
         (scheme, host, path, _, _) = urlparse.urlsplit(url)
             
@@ -93,6 +93,7 @@ class Connect(object):
         self.username = username
         self.password = password
         
+        self._request_timeout = request_timeout
         # Create Http class with support for Digest HTTP Authentication
         self.http = httplib2.Http(cache=None, ca_certs=ca_certs)
         self.http.follow_all_redirects = True
@@ -190,7 +191,7 @@ class Connect(object):
             tries_remaining = tries_remaining - 1
             try:
                 signal.signal(signal.SIGALRM, _request_timeout_handler)
-                signal.alarm(Connect.REQUEST_TIMEOUT)
+                signal.alarm(self._request_timeout)
                 resp, content = self.http.request(url, method.upper(),
                     body=body, headers=headers)
                 signal.alarm(0)

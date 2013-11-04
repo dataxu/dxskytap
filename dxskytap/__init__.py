@@ -59,7 +59,7 @@ class Skytap(object):
     through the skytap object.
     '''
 
-    def __init__(self, username=None, password=None):
+    def __init__(self, username=None, password=None, request_timeout=300):
         '''
         Constructor
         
@@ -80,6 +80,11 @@ class Skytap(object):
         [credentials]
         username: fakeuser
         password: <password>
+
+        :username: authenticating username
+        :password: username's password
+        :request_timeout: throw a TimeoutException if Skytap doesn't respond
+            within this window. Default: 5 minutes
         '''
         if username is None and password is None:
             config = ConfigParser.ConfigParser()
@@ -94,7 +99,8 @@ class Skytap(object):
                     "in ~/.skytap_config")
         path = os.path.dirname(sys.modules[Skytap.__module__].__file__)
         ca_certs = os.path.join(path, "skytapCert.pem")
-        self.connect = Connect(SKYTAP_URL, ca_certs, username, password)
+        self.connect = Connect(SKYTAP_URL, ca_certs, username, password,
+            request_timeout)
     
     def assets(self):
         """

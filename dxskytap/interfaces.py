@@ -28,7 +28,7 @@ from dxskytap.restobject import RestMap, RestObject, RestAttribute
 class PublicIP(RestObject):
     
     def __init__(self, connect, base_resource, uid, initial_data):
-        res = "%s/public_ips/%s" %s (base_resource, uid)
+        res = "%s/public_ips/%s" % (base_resource, uid)
         RestObject.__init__(self, connect, res, initial_data)
         
     uid = RestAttribute('id', readonly=True)

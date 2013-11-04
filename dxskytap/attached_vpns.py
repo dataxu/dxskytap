@@ -69,7 +69,6 @@ class AttachedVPN(RestObject):
         Return the VPN object the virtual network is attached to.
         """
         data = self.alldata()['vpn']
-        'vpns/%s' % (self.vpn_id())
         return VPN(self._connect, self.vpn_id(), data)
 
     def detach(self):

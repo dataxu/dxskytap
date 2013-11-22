@@ -91,4 +91,5 @@ class Interfaces(RestMap):
     
     def __init__(self, connect, resource):
         RestMap.__init__(self, connect, "%s/interfaces" % (resource),
-            lambda conn, data: Interface(conn, resource, data['id'], data))
+            lambda conn, data: Interface(conn, resource, data['id'], data),
+            name_field='network_name')

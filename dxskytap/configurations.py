@@ -120,6 +120,7 @@ class Configuration(AssignableObject):
         resources.extend(self.vms().values())
         for network in self.networks().values():
             resources.extend(network.tunnels())
+        # TODO: add VPN to resource list
         remaining = check_limit
         ready = False
         while not ready and remaining > 0:

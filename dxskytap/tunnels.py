@@ -31,7 +31,7 @@ class Tunnel(RestObject):
     together. Note: the networks must use non-overlaping subnets.
     """
     def __init__(self, connect, uid, initial_data):
-        RestObject.__init__(self, connect, "/tunnels/%s" % (uid), 
+        RestObject.__init__(self, connect, "tunnels/%s" % (uid), 
             initial_data)
     
     uid = RestAttribute("id", readonly=True)

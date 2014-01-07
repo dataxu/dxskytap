@@ -7,7 +7,7 @@ dx_skytap module setup and package.
 from setuptools import setup
 
 setup(
-    name='DXSkytap',
+    name='dxskytap',
     author='DataXu',
     author_email='rcarey@dataxu.com',
     description='DataXu Utilities for Skytap',

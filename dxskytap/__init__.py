@@ -32,7 +32,7 @@ Classes:
 '''
 
 from dxskytap.assets import Assets
-from dxskytap.users import Users
+from dxskytap.users import Users, User
 from dxskytap.configurations import Configurations, Configuration
 from dxskytap.templates import Templates, Template
 from dxskytap.vpns import VPNs
@@ -107,7 +107,7 @@ class Skytap(object):
         This function returns the dictionary of assets that the
         logged in user is able to access. 
         """
-        return Assets(self.connect)
+        return Assets(self.connect, User)
     
     def users(self):
         """
@@ -128,14 +128,14 @@ class Skytap(object):
         This function returns the dictionary of configurations that the 
         logged in user is able to access. 
         """
-        return Configurations(self.connect, Template)
+        return Configurations(self.connect, Template, User)
     
     def templates(self):
         """
         This function returns the dictionary of templates that the logged in
         user is able to access. 
         """
-        return Templates(self.connect, Configuration)
+        return Templates(self.connect, Configuration, User)
     
     def vpns(self):
         """

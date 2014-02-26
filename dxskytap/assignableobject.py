@@ -23,7 +23,8 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from dxskytap.restobject import RestObject
+from dxskytap.restobject import RestObject, RestAttribute
+import urlparse
 
 class AssignableObject(RestObject):
     """
@@ -35,7 +36,7 @@ class AssignableObject(RestObject):
        none
     """
 
-    def __init__(self, connect, resource, initial_data, obj_type):
+    def __init__(self, connect, resource, initial_data, obj_type, user_cls):
         """
         Constructor for a Assignable object.
     
@@ -48,7 +49,15 @@ class AssignableObject(RestObject):
         """
         RestObject.__init__(self, connect, resource, initial_data)
         self._obj_type = obj_type
-        
+        self._user_cls = user_cls
+
+    owner_url = RestAttribute('owner')
+
+    def owner(self):
+        (_, _, path, _, _) = urlparse.urlsplit(self.owner_url)
+        owner_id = path.split('/')[-1]
+        return self._user_cls(self._connect, owner_id, {})
+
     def reassign(self, user, project=None):
         """
         Reassign the user that owns this skytap resource.

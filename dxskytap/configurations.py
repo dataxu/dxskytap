@@ -109,7 +109,7 @@ class Configuration(AssignableObject):
             body['vm_ids'] = vm_ids
         result = self._connect.post("templates", body=body)
         return self._template_cls(self._connect, result['id'], result,
-            Configuration)
+            Configuration, self._user_cls)
 
     def check_state(self, states=None):
         if states is None: return self.runstate != 'busy'

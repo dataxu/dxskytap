@@ -72,7 +72,7 @@ class Template(AssignableObject):
             body['vm_ids'] = vm_ids
         result = self._connect.post("configurations", body=body)
         return self._configuration_cls(self._connect, result['id'],
-            result, Template)
+            result, Template, self._user_cls)
 
     def wait_for(self, check_interval=15, check_limit=20):
         remaining = check_limit

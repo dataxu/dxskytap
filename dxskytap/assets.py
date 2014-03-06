@@ -24,8 +24,9 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from dxskytap.restobject import RestMap, RestObject, RestAttribute
+from dxskytap.assignableobject import AssignableObject
 
-class Asset(RestObject):
+class Asset(AssignableObject):
     """
     Generally, a customer asset is any data available in the Skytap
     Cloud context. Typically this is data that a customer has loaded
@@ -42,7 +43,7 @@ class Asset(RestObject):
         size - the size of the asset file.
         url - a url that can used to download a copy of the asset.
     """
-    def __init__(self, connect, uid, initial_data):
+    def __init__(self, connect, uid, initial_data, user_cls):
         '''
         Constructor
         
@@ -55,9 +56,10 @@ class Asset(RestObject):
             initialData  - A dict containing a partial cache of the name/value 
                 attributes for this asset.
         '''
-        RestObject.__init__(self, connect, "assets/%s" % (uid),
-            initial_data, False)
-    
+        AssignableObject.__init__(self, connect,
+            "assets/%s" % (uid),
+            initial_data, "assets", user_cls)
+
     uid = RestAttribute("id", readonly=True)
     name = RestAttribute("name", readonly=True)
     public = RestAttribute("public", readonly=True)
@@ -71,6 +73,6 @@ class Assets(RestMap):
     assets. There is no way to create or delete assets 
     through this collection.
     """
-    def __init__(self, connect):
+    def __init__(self, connect, user_cls):
         RestMap.__init__(self, connect, "assets",
-            lambda conn, data: Asset(conn, data['id'], data))
+            lambda conn, data: Asset(conn, data['id'], data, user_cls))

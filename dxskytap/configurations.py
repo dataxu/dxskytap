@@ -51,7 +51,7 @@ class Configuration(AssignableObject):
         useSmartClient
     """
 
-    def __init__(self, connect, uid, initial_data, template_cls):
+    def __init__(self, connect, uid, initial_data, template_cls, user_cls):
         """
         Constructor for a Configuration object.
     
@@ -67,7 +67,7 @@ class Configuration(AssignableObject):
         """
         AssignableObject.__init__(self, connect,
             "configurations/%s" % (uid),
-            initial_data, "configurations")
+            initial_data, "configurations", user_cls)
         self._template_cls = template_cls
         
     runstate = RestAttribute('runstate')
@@ -109,7 +109,7 @@ class Configuration(AssignableObject):
             body['vm_ids'] = vm_ids
         result = self._connect.post("templates", body=body)
         return self._template_cls(self._connect, result['id'], result,
-            Configuration)
+            Configuration, self._user_cls)
 
     def check_state(self, states=None):
         if states is None: return self.runstate != 'busy'
@@ -140,17 +140,18 @@ class Configuration(AssignableObject):
 
 class Configurations(RestMap):
 
-    def __init__(self, connect, template_cls):
+    def __init__(self, connect, template_cls, user_cls):
         RestMap.__init__(self, connect, "configurations",
             lambda conn, data: Configuration(conn, data['id'], data,
-                template_cls))
+                template_cls, user_cls))
         self._template_cls = template_cls
+        self._user_cls = user_cls
         
     def create_configuration(self, template_id):
         args = { 'template_id':template_id }
         result = self._connect.post("configurations", args)
         return Configuration(self._connect, result['id'], result, 
-           self._template_cls)
+           self._template_cls, self._user_cls)
         
         
     

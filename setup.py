@@ -17,5 +17,5 @@ setup(
     install_requires=['httplib2 >= 0.8','pexpect >= 2.4'],
     setup_requires=['httplib2', 'pexpect'],
     url='http://www.dataxu.com',
-    version='0.8.0'
+    version='0.9.0'
 )

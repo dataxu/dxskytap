@@ -45,9 +45,9 @@ class Template(AssignableObject):
     in the API.
     """
     
-    def __init__(self, connect, uid, intial_data, configuration_cls):
+    def __init__(self, connect, uid, intial_data, configuration_cls, user_cls):
         AssignableObject.__init__(self, connect, "templates/%s" % (uid),
-            intial_data, "templates")
+            intial_data, "templates", user_cls)
         self._configuration_cls = configuration_cls
         
     uid = RestAttribute('id', readonly=True)
@@ -72,7 +72,7 @@ class Template(AssignableObject):
             body['vm_ids'] = vm_ids
         result = self._connect.post("configurations", body=body)
         return self._configuration_cls(self._connect, result['id'],
-            result, Template)
+            result, Template, self._user_cls)
 
     def wait_for(self, check_interval=15, check_limit=20):
         remaining = check_limit
@@ -89,17 +89,18 @@ class Template(AssignableObject):
 
 class Templates(RestMap):
 
-    def __init__(self, connect, configuration_cls):
+    def __init__(self, connect, configuration_cls, user_cls):
         RestMap.__init__(self, connect, "templates",
             lambda conn, data: Template(conn, data['id'], data, 
-                configuration_cls))
+                configuration_cls, user_cls))
         self._configuration_cls = configuration_cls
-        
+        self._user_cls = user_cls
+
     def create_template(self, configuration_id, publish_sets):
         args = { 'configuration_id': configuration_id,
                  'publish_sets': publish_sets }
         result = self._connect.post("templates", args)
         return Template(self._connect, result['id'], result, 
-            self._configuration_cls)
+            self._configuration_cls, self._user_cls)
 
 

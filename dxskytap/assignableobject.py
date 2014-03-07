@@ -54,6 +54,8 @@ class AssignableObject(RestObject):
     owner_url = RestAttribute('owner')
 
     def owner(self):
+        if self.owner_url is None:
+            return None
         (_, _, path, _, _) = urlparse.urlsplit(self.owner_url)
         owner_id = path.split('/')[-1]
         return self._user_cls(self._connect, owner_id, {})

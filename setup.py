@@ -15,7 +15,8 @@ setup(
     packages=['dxskytap'],
     package_data={'dxskytap': ['*.pem']},
     install_requires=['httplib2 >= 0.8','pexpect >= 2.4'],
-    setup_requires=['httplib2', 'pexpect'],
+    tests_require=['nose','coverage'],
+    test_suite='test.all',
     url='http://www.dataxu.com',
     version='0.9.1'
 )

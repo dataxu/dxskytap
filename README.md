@@ -3,7 +3,7 @@ DataXu Skytap API Utilities
 ===========================
 
 This module contains utilities for accessing SkyTap's available API
-functions. This code was originally developed at [DataXu](www.dataxu.com)
+functions. This code was originally developed at [DataXu](http://www.dataxu.com)
 and released as open source.
 
 Code Style

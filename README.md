@@ -3,7 +3,8 @@ DataXu Skytap API Utilities
 ===========================
 
 This module contains utilities for accessing SkyTap's available API
-functions. It requires Python 2.7.
+functions. This code was originally developed at [DataXu](www.dataxu.com)
+and released as open source.
 
 Code Style
 ==========

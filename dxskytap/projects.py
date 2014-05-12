@@ -35,6 +35,7 @@ from dxskytap.restobject import RestMap, RestObject
 from dxskytap.restobject import RestAttribute, RestBoolAttribute
 from dxskytap.configurations import Configuration
 from dxskytap.templates import Template
+from dxskytap.users import User
 
 class Project (RestObject):
     """
@@ -76,7 +77,7 @@ class Project (RestObject):
         project.
         """
         results = self._connect.get("templates")
-        return [Template(self._connect, data['id'], data, Configuration)
+        return [Template(self._connect, data['id'], data, Configuration, User)
             for data in results]
 
     def configurations(self):
@@ -85,7 +86,7 @@ class Project (RestObject):
         project.
         """
         results = self._connect.get("configurations")
-        return [Configuration(self._connect, data['id'], data, Template)
+        return [Configuration(self._connect, data['id'], data, Template, User)
             for data in results]
 
     def add(self, obj, obj_type, role=None):

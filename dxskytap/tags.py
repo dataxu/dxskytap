@@ -28,7 +28,7 @@ from dxskytap.restobject import RestMap, RestObject, RestAttribute
 class Note(RestObject):
     def __init__(self, connect, res, uid, intial_data):
         RestObject.__init__(self, connect, "%s/notes/%s" % (res, uid),
-            intial_data)
+            intial_data, can_refresh=False)
 
     uid = RestAttribute("id", readonly=True)
     text = RestAttribute("text")

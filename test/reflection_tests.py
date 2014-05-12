@@ -14,7 +14,8 @@ import re
 import Queue
 import logging
 
-ignoreAttrs = ['delete', '_newFunc','create_template','create_configuration']
+ignoreAttrs = ['delete', '_newFunc','create_template','create_configuration',
+    'attach_vpn','detach']
 #'__doc__', '__init__', '__delattr__', '__format__',
 #'__class__', '__module__', '__repr__', '__str__',
 #'__dict__', '__getattribute__', '__getitem__',

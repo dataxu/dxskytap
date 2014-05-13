@@ -82,4 +82,4 @@ class Tunnels(RestMap):
         body = {'source_network_id': str(source_network_id),
                 'target_network_id': str(target_network_id)}
         result = self._connect.post("tunnels", body)
-        return Tunnel(self._connect, "", result['id'], result)
+        return Tunnel(self._connect, result['id'], result)

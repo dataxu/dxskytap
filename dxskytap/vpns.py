@@ -28,7 +28,7 @@ from dxskytap.restobject import RestMap, RestObject, RestAttribute
 
 class VPN(RestObject):
     def __init__(self, connect, uid, intial_data):
-        RestObject.__init__(self, connect, "vpns/%s" % (uid), intial_data)
+        super(VPN, self).__init__(connect, "vpns/%s" % (uid), intial_data)
     
     dpd_enabled = RestAttribute('dpd_enabled')
     enabled = RestAttribute('enabled')
@@ -133,6 +133,6 @@ class VPN(RestObject):
 class VPNs(RestMap):
 
     def __init__(self, connect):
-        RestMap.__init__(self, connect, "vpns", 
+        super(VPNs, self).__init__(connect, "vpns", 
             lambda conn, data: VPN(conn, data['id'], data))
 

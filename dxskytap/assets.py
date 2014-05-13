@@ -56,7 +56,7 @@ class Asset(AssignableObject):
             initialData  - A dict containing a partial cache of the name/value 
                 attributes for this asset.
         '''
-        AssignableObject.__init__(self, connect,
+        super(Asset, self).__init__(connect,
             "assets/%s" % (uid),
             initial_data, "assets", user_cls)
 
@@ -74,5 +74,5 @@ class Assets(RestMap):
     through this collection.
     """
     def __init__(self, connect, user_cls):
-        RestMap.__init__(self, connect, "assets",
+        super(Assets, self).__init__(connect, "assets",
             lambda conn, data: Asset(conn, data['id'], data, user_cls))

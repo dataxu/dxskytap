@@ -27,7 +27,7 @@ from dxskytap.restobject import RestMap, RestObject, RestAttribute
 
 class Note(RestObject):
     def __init__(self, connect, res, uid, intial_data):
-        RestObject.__init__(self, connect, "%s/notes/%s" % (res, uid),
+        super(Note, self).__init__(connect, "%s/notes/%s" % (res, uid),
             intial_data, can_refresh=False)
 
     uid = RestAttribute("id", readonly=True)
@@ -39,7 +39,7 @@ class Note(RestObject):
 class Notes(RestMap):
 
     def __init__(self, connect, res):
-        RestMap.__init__(self, connect, "%s/notes" % (res),
+        super(Notes, self).__init__(connect, "%s/notes" % (res),
             lambda conn, data: Note(conn, res, data['id'], data))
         self._base_resource = res
 
@@ -51,7 +51,7 @@ class Notes(RestMap):
 
 class Label(RestObject):
     def __init__(self, connect, res, uid, intial_data):
-        RestObject.__init__(self, connect, "%s/labels/%s" % (res, uid),
+        super(Label, self).__init__(connect, "%s/labels/%s" % (res, uid),
             intial_data)
 
     uid = RestAttribute("id", readonly=True)
@@ -67,7 +67,7 @@ class Labels(RestMap):
        'LicenseTag', 'RegionNameTag', 'SecurityTag', 'VersionTag']
 
     def __init__(self, connect, res, vmtype):
-        RestMap.__init__(self, connect, "%s/labels" % (res),
+        super(Labels, self).__init__(connect, "%s/labels" % (res),
             lambda conn, data: Note(conn, res, data['id'], data))
         self._base_resource = res
         self._vm_type = vmtype
@@ -90,7 +90,7 @@ class Labels(RestMap):
 
 class Credential(RestObject):
     def __init__(self, connect, res, uid, intial_data):
-        RestObject.__init__(self, connect,
+        super(Credential, self).__init__(connect,
             "%s/credentials/%s" % (res, uid), intial_data)
 
     uid = RestAttribute("id", readonly=True)
@@ -100,7 +100,8 @@ class Credential(RestObject):
 class Credentials(RestMap):
 
     def __init__(self, connect, res):
-        RestMap.__init__(self, connect, "%s/credentials" % (res),
+        super(Credentials, self).__init__(connect,
+            "%s/credentials" % (res),
             lambda conn, data: Note(conn, res, data['id'], data))
         self._base_resource = res
 

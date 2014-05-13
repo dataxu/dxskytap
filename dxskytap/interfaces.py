@@ -29,7 +29,7 @@ class PublicIP(RestObject):
     
     def __init__(self, connect, base_resource, uid, initial_data):
         res = "%s/public_ips/%s" % (base_resource, uid)
-        RestObject.__init__(self, connect, res, initial_data)
+        super(PublicIP, self).__init__(connect, res, initial_data)
         
     uid = RestAttribute('id', readonly=True)
     address = RestAttribute('address')
@@ -38,14 +38,16 @@ class PublicIP(RestObject):
 class PublicIPs(RestMap):
 
     def __init__(self, connect, resource):
-        RestMap.__init__(self, connect, "%s/public_ips" % (resource),
+        super(PublicIps, self).__init__(connect,
+            "%s/public_ips" % (resource),
             lambda conn, data: PublicIP(conn, resource, data, data))
         
 class PublishedService(RestObject):
     
     def __init__(self, connect, base_resource, uid, initial_data):
         res = "%s/services/%s" % (base_resource, uid)
-        RestObject.__init__(self, connect, res, initial_data)
+        super(PublishedService, self).__init__(connect, res,
+            initial_data)
         
     uid = RestAttribute('id', readonly=True)
     external_port = RestAttribute('external_port', readonly=True)
@@ -55,14 +57,15 @@ class PublishedService(RestObject):
 class PublishedServices(RestMap):
 
     def __init__(self, connect, resource):
-        RestMap.__init__(self, connect, "%s/services" % (resource),
+        super(PublishedServices, self).__init__(connect,
+            "%s/services" % (resource),
             lambda conn, data: PublishedService(conn, resource, data['id'],
                 data))
 
 class Interface(RestObject):
     def __init__(self, connect, base_resource, uid, intial_data):
         res = "%s/interfaces/%s" % (base_resource, uid)
-        RestObject.__init__(self, connect, res, intial_data)
+        super(Interface, self).__init__(connect, res, intial_data)
     
     uid = RestAttribute("id", readonly=True)
     hostname = RestAttribute("hostname")
@@ -90,6 +93,7 @@ class Interface(RestObject):
 class Interfaces(RestMap):
     
     def __init__(self, connect, resource):
-        RestMap.__init__(self, connect, "%s/interfaces" % (resource),
+        super(Interfaces, self).__init__(connect,
+            "%s/interfaces" % (resource),
             lambda conn, data: Interface(conn, resource, data['id'], data),
             name_field='network_name')

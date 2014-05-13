@@ -1,155 +1,158 @@
-dxskytap Package
+dxskytap package
 ================
 
-:mod:`dxskytap` Package
------------------------
+Submodules
+----------
 
-.. automodule:: dxskytap.__init__
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`assets` Module
---------------------
+dxskytap.assets module
+----------------------
 
 .. automodule:: dxskytap.assets
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`assignableobject` Module
-------------------------------
+dxskytap.assignableobject module
+--------------------------------
 
 .. automodule:: dxskytap.assignableobject
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`attached_vpns` Module
----------------------------
+dxskytap.attached_vpns module
+-----------------------------
 
 .. automodule:: dxskytap.attached_vpns
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`configurations` Module
-----------------------------
+dxskytap.configurations module
+------------------------------
 
 .. automodule:: dxskytap.configurations
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`connect` Module
----------------------
+dxskytap.connect module
+-----------------------
 
 .. automodule:: dxskytap.connect
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`hardware` Module
-----------------------
+dxskytap.hardware module
+------------------------
 
 .. automodule:: dxskytap.hardware
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`interfaces` Module
-------------------------
+dxskytap.interfaces module
+--------------------------
 
 .. automodule:: dxskytap.interfaces
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`networks` Module
-----------------------
+dxskytap.networks module
+------------------------
 
 .. automodule:: dxskytap.networks
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`projects` Module
-----------------------
+dxskytap.projects module
+------------------------
 
 .. automodule:: dxskytap.projects
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`publish_sets` Module
---------------------------
+dxskytap.publish_sets module
+----------------------------
 
 .. automodule:: dxskytap.publish_sets
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`restobject` Module
-------------------------
+dxskytap.restobject module
+--------------------------
 
 .. automodule:: dxskytap.restobject
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`settings` Module
-----------------------
+dxskytap.settings module
+------------------------
 
 .. automodule:: dxskytap.settings
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`tags` Module
-------------------
+dxskytap.tags module
+--------------------
 
 .. automodule:: dxskytap.tags
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`templates` Module
------------------------
+dxskytap.templates module
+-------------------------
 
 .. automodule:: dxskytap.templates
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`tunnels` Module
----------------------
+dxskytap.tunnels module
+-----------------------
 
 .. automodule:: dxskytap.tunnels
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`users` Module
--------------------
+dxskytap.users module
+---------------------
 
 .. automodule:: dxskytap.users
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`vms` Module
------------------
+dxskytap.vms module
+-------------------
 
 .. automodule:: dxskytap.vms
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`vpns` Module
-------------------
+dxskytap.vpns module
+--------------------
 
 .. automodule:: dxskytap.vpns
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: dxskytap
+    :members:
+    :undoc-members:
+    :show-inheritance:

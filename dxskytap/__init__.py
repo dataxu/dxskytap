@@ -88,7 +88,7 @@ class Skytap(object):
         '''
         if username is None and password is None:
             config = ConfigParser.ConfigParser()
-            filepath = os.getenv('HOME') + "/.skytap_config"
+            filepath = os.path.join(os.getenv('HOME'),".skytap_config")
             config.read(filepath)
             if(config.has_option("credentials", "username")
                and config.has_option("credentials", "password")):

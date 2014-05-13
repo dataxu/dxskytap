@@ -23,7 +23,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from dxskytap.restobject import RestMap, RestObject, RestAttribute
+from dxskytap.restobject import RestMap, RestAttribute
 from dxskytap.assignableobject import AssignableObject
 
 class Asset(AssignableObject):

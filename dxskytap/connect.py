@@ -162,12 +162,12 @@ class Connect(object):
         body to the logger.
         """
         for (key, val) in headers.items():
-            self.logger.debug("%s_header: %s: %s" %(msg, key, val))
+            self.logger.debug("%s_header: %s: %s", msg, key, val)
         if body is None:
             body_txt =  ''
         else:
             body_txt = re.escape(body)
-        self.logger.debug("%s_body: %s" % (msg, body_txt))
+        self.logger.debug("%s_body: %s", msg, body_txt)
 
     def _perform_request(self, url, method, body, headers):
         """

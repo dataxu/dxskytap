@@ -274,7 +274,7 @@ class RestAttribute(object):
         object
         """
         if(not obj.is_active()):
-            raise AttributeError, "method called on inactive rest object"
+            raise AttributeError("method called on inactive rest object")
         
     def __get__(self, obj, cls=None):
         if(obj is None):
@@ -301,16 +301,16 @@ class RestAttribute(object):
             else:
                 obj.set_attribute(self._attr_name, self._setfunc(val))
         else:
-            raise AttributeError, "attribute %s is readonly" % (
-                self._attr_name)
+            raise AttributeError("attribute %s is readonly" % (
+                self._attr_name))
         
     def __delete__(self, obj):
         self._fire_inactive(obj)
         if(self._readonly == False):
             obj.set_attribute(self._attr_name, '')
         else:
-            raise AttributeError, "attribute %s is readonly" % (
-                self._attr_name)
+            raise AttributeError("attribute %s is readonly" % (
+                self._attr_name))
 
 class RestBoolAttribute(RestAttribute):
     """

@@ -14,10 +14,11 @@ Please follow `PEP-008 <http://www.python.org/dev/peps/pep-0008/>`_.
 Install
 ======
 
-The only way to run the `dxautoskytap` tool is to install from pip:
+The best way to install the `dxskytap` tool is to install direct from the 
+github using pip:
 
 ```
-# Replace [TAG] with a dxskytap git ref
+# Replace [TAG] with a dxskytap git ref (such as master)
   $ pip install git+git@github.com:dataxu/dxskytap.git@[TAG]#egg=dxskytap
 
 # Example
@@ -48,10 +49,11 @@ Tests
 To run all tests, from this directory:
 
 ```bash
-$ python -m test.all
+$ python setup.py nosetests
 ```
 
-To run any individual test, just replace "all" with the name of the test.
+To run any individual tests, call nosetests directly. Refer to 
+http://nose.readthedocs.org/en/latest/usage.html for details on using nose.
 
 When you add a new test, be sure to add it as an import to all.py
 

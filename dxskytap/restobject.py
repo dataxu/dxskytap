@@ -123,7 +123,7 @@ class RestObject(RestBase):
         """
         When an RestAttribute has its value set this method is called
         to execute a HTTP PUT to push the updated attribute to Skytap. 
-        Users of the dxskyap library should never call this method
+        Users of the dxskytap library should never call this method
         directly.
         Parameters
             attr_name - The name of the attribute being set.
@@ -148,7 +148,7 @@ class RestObject(RestBase):
     def refresh(self):
         """
         A RestObject is a snapshot of a Skytap resource that is 
-        downloaded from the Skyap API. It contains the resource
+        downloaded from the Skytap API. It contains the resource
         data for when it was downloaded but any changes to the 
         object are not stored in this local RestObject. To update
         the object with the latest information call this refresh

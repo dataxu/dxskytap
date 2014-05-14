@@ -23,9 +23,11 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from os.path import join, expanduser
+
 """
 Globals
 """
 
 SKYTAP_URL = "https://cloud.skytap.com"
-DEFAULT_SKYTAP_CONFIG_FILE="~/.skytap_config"
+DEFAULT_SKYTAP_CONFIG_FILE=join(expanduser('~'), '.skytap_config')

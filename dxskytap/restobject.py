@@ -37,8 +37,21 @@ class RestBase(object):
                 requests
             resource - the relative URI to the resource represented by this
                 object
-            initial_data - 
-            is_full - this flag
+            initial_data - a dictionary containing attribute/value pairs for
+                this object. It can be a partial set. For instance if this
+                is template object created after calling
+                cloud.skytap.com/templates, the Skytap API only returns a 
+                subset of the data for each template when list all the user's
+                templates.
+            is_full - this flag is used to determine when all the attributes
+                for this object has been gathered from the Skytap API.
+                When the object is first created only a subset of attribute
+                values are known. A second API call to Skytap is need to get
+                all data. This class performs that 2nd only when necessary.
+            can_refresh - this flag indicates that the object can be directly
+                referenced with a URI to the Skytap API. Objects that are 
+                embedded in other object have no direct URL, and the refresh
+                call will not work on these objects.
         """
         self._connect = connect
         self._resource = resource
@@ -110,6 +123,11 @@ class RestObject(RestBase):
         """
         When an RestAttribute has its value set this method is called
         to execute a HTTP PUT to push the updated attribute to Skytap. 
+        Users of the dxskytap library should never call this method
+        directly.
+        Parameters
+            attr_name - The name of the attribute being set.
+            attr_value - The new value for the attribute.
         """
         if(self._parent_attr is not None):
             attr_name = '%s[%s]' % (self._parent_attr, attr_name)
@@ -128,6 +146,14 @@ class RestObject(RestBase):
                 "on this object.")
     
     def refresh(self):
+        """
+        A RestObject is a snapshot of a Skytap resource that is 
+        downloaded from the Skytap API. It contains the resource
+        data for when it was downloaded but any changes to the 
+        object are not stored in this local RestObject. To update
+        the object with the latest information call this refresh
+        method.
+        """
         if(self._can_refresh):
             if(self._parent is not None):
                 self._parent.refresh()
@@ -150,6 +176,20 @@ class RestMap(RestBase):
     """
     
     def __init__(self, connect, resource, new_func, name_field='name'):
+        """
+        Construct a new dictionary of name and Skytap Object pairs. Skytap
+        objects are created only when the RestMap is traversed or getitem
+        is called on this dict like object.
+        Parameters
+            connect - The Connect class that maintains the users session with
+                      Skytap.
+            resource - The relative path to this resource.
+            new_func - This function is used to build the Skytap objects.
+                The function is passed Connect class and dict of attribute
+                data for the created object.
+            name_field - The field in the object's attribute data to use
+                as the key in the dict. This defaults to 'name'.
+        """
         super(RestMap, self).__init__(connect, resource)
         self._new_func = new_func
         self._name_field = name_field
@@ -274,7 +314,7 @@ class RestAttribute(object):
         object
         """
         if(not obj.is_active()):
-            raise AttributeError, "method called on inactive rest object"
+            raise AttributeError("method called on inactive rest object")
         
     def __get__(self, obj, cls=None):
         if(obj is None):
@@ -301,16 +341,16 @@ class RestAttribute(object):
             else:
                 obj.set_attribute(self._attr_name, self._setfunc(val))
         else:
-            raise AttributeError, "attribute %s is readonly" % (
-                self._attr_name)
+            raise AttributeError("attribute %s is readonly" % (
+                self._attr_name))
         
     def __delete__(self, obj):
         self._fire_inactive(obj)
         if(self._readonly == False):
             obj.set_attribute(self._attr_name, '')
         else:
-            raise AttributeError, "attribute %s is readonly" % (
-                self._attr_name)
+            raise AttributeError("attribute %s is readonly" % (
+                self._attr_name))
 
 class RestBoolAttribute(RestAttribute):
     """

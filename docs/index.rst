@@ -10,7 +10,7 @@ Welcome to dxskytap's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
    setup
    dxskytap

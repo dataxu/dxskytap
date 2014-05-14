@@ -41,7 +41,7 @@ import ConfigParser
 import os
 import sys
 from dxskytap.connect import Connect   
-from dxskytap.settings import SKYTAP_URL
+from dxskytap.settings import SKYTAP_URL, DEFAULT_SKYTAP_CONFIG_FILE
 
 __all__ = ["Skytap"]
 
@@ -88,7 +88,8 @@ class Skytap(object):
         '''
         if username is None and password is None:
             config = ConfigParser.ConfigParser()
-            filepath = os.path.join(os.getenv('HOME'),".skytap_config")
+            filepath = os.path.expanduser(os.getenv('SKYTAP_CONFIG',
+                DEFAULT_SKYTAP_CONFIG_FILE))
             config.read(filepath)
             if(config.has_option("credentials", "username")
                and config.has_option("credentials", "password")):

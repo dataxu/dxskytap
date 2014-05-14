@@ -28,3 +28,4 @@ Globals
 """
 
 SKYTAP_URL = "https://cloud.skytap.com"
+DEFAULT_SKYTAP_CONFIG_FILE="~/.skytap_config"

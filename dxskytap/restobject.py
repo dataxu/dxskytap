@@ -99,8 +99,8 @@ class RestObject(RestBase):
                 context of its parent, use this attribute name to get/set
                 the nest object value in the parent.
         """
-        RestBase.__init__(self, connect, resource, initial_data, is_full,
-            can_refresh)
+        super(RestObject, self).__init__(connect, resource,
+            initial_data, is_full, can_refresh)
         self._active = True
         self._can_delete = can_delete
         self._parent = parent
@@ -150,7 +150,7 @@ class RestMap(RestBase):
     """
     
     def __init__(self, connect, resource, new_func, name_field='name'):
-        RestBase.__init__(self, connect, resource)
+        super(RestMap, self).__init__(connect, resource)
         self._new_func = new_func
         self._name_field = name_field
     
@@ -318,6 +318,6 @@ class RestBoolAttribute(RestAttribute):
     """
     
     def __init__(self, attr_name, readonly=False):
-        RestAttribute.__init__(self, attr_name, readonly, 
+        super(RestBoolAttribute, self).__init__(attr_name, readonly, 
                 lambda val: str(val).lower() == 'true',
                 lambda val: str(val).lower())

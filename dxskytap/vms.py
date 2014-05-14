@@ -33,7 +33,7 @@ class VirtualMachine(RestObject):
     
     def __init__(self, connect, base_resource, uid, initial_data):
         res = "%s/vms/%s" % (base_resource, uid)
-        RestObject.__init__(self, connect, res, initial_data)
+        super(VirtualMachine, self).__init__(connect, res, initial_data)
     
     runstate = RestAttribute('runstate')
     uid = RestAttribute('id', readonly=True)
@@ -82,5 +82,6 @@ class VirtualMachine(RestObject):
 class VirtualMachines(RestMap):
 
     def __init__(self, connect, resource):
-        RestMap.__init__(self, connect, "%s/vms" % (resource),
+        super(VirtualMachines, self).__init__(connect,
+            "%s/vms" % (resource),
             lambda conn, data: VirtualMachine(conn, resource, data['id'], data))

@@ -65,7 +65,7 @@ class Configuration(AssignableObject):
                 class. It is required as a parameter to solve a dependency
                 problem, which is explained here.
         """
-        AssignableObject.__init__(self, connect,
+        super(Configuration, self).__init__(connect,
             "configurations/%s" % (uid),
             initial_data, "configurations", user_cls)
         self._template_cls = template_cls
@@ -141,7 +141,7 @@ class Configuration(AssignableObject):
 class Configurations(RestMap):
 
     def __init__(self, connect, template_cls, user_cls):
-        RestMap.__init__(self, connect, "configurations",
+        super(Configurations, self).__init__(connect, "configurations",
             lambda conn, data: Configuration(conn, data['id'], data,
                 template_cls, user_cls))
         self._template_cls = template_cls

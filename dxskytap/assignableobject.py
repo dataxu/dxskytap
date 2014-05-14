@@ -47,7 +47,8 @@ class AssignableObject(RestObject):
                 object. This partial data is obtained from the parent list
                 when the library queries skytap for a list of objects.
         """
-        RestObject.__init__(self, connect, resource, initial_data)
+        super(AssignableObject, self).__init__(connect, resource,
+            initial_data)
         self._obj_type = obj_type
         self._user_cls = user_cls
 

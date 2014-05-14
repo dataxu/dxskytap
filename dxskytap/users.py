@@ -27,7 +27,8 @@ from dxskytap.restobject import RestMap, RestObject, RestAttribute
 
 class User(RestObject):
     def __init__(self, connect, uid, intial_data):
-        RestObject.__init__(self, connect, "users/%s" % (uid), intial_data)
+        super(User, self).__init__(connect,
+            "users/%s" % (uid), intial_data)
     
     email = RestAttribute("email")
     first_name = RestAttribute("first_name")
@@ -50,7 +51,7 @@ class User(RestObject):
 class Users(RestMap):
 
     def __init__(self, connect):
-        RestMap.__init__(self, connect, "users",
+        super(Users, self).__init__(connect, "users",
             lambda conn, data: User(conn, data['id'], data),
             name_field='login_name')
 

@@ -38,7 +38,8 @@ class AttachedVPN(RestObject):
     
     def __init__(self, connect, base_resource, vpn_id, intial_data):
         res = "%s/vpns/%s" % (base_resource, vpn_id)
-        RestObject.__init__(self, connect, res, intial_data, is_full=True)
+        super(AttachedVPN, self).__init__(connect, res, intial_data,
+            is_full=True)
 
     uid = RestAttribute('id', readonly=True)
     connected = RestBoolAttribute('connected')

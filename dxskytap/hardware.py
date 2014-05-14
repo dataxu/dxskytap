@@ -27,8 +27,8 @@ from dxskytap.restobject import RestObject, RestAttribute
 
 class Hardware(RestObject):
     def __init__(self, connect, res, initial_data, parent):
-        RestObject.__init__(self, connect, res, initial_data, is_full=True,
-            parent=parent, parent_attr="hardware")
+        super(Hardware, self).__init__(connect, res, initial_data,
+            is_full=True, parent=parent, parent_attr="hardware")
     
     cpus = RestAttribute("cpus")
     guest_os = RestAttribute("guestOS", readonly=True)
@@ -46,8 +46,8 @@ class Hardware(RestObject):
     
 class Disk(RestObject):
     def __init__(self, connect, res, initial_data, parent):
-        RestObject.__init__(self, connect, res, initial_data, is_full=True, 
-            parent=parent, parent_attr="disks")
+        super(Disk, self).__init__(connect, res, initial_data,
+            is_full=True, parent=parent, parent_attr="disks")
     
     controller = RestAttribute("controller", readonly=True)
     uid = RestAttribute("id", readonly=True)

@@ -32,7 +32,7 @@ class VirtualNetwork(RestObject):
     
     def __init__(self, connect, base_resource, uid, intial_data):
         res = "%s/networks/%s" % (base_resource, uid)
-        RestObject.__init__(self, connect, res, intial_data)
+        super(VirtualNetwork, self).__init__(connect, res, intial_data)
         
     uid = RestAttribute('id', readonly=True)
     name = RestAttribute('name')
@@ -68,5 +68,6 @@ class VirtualNetwork(RestObject):
 class VirtualNetworks(RestMap):
 
     def __init__(self, connect, resource):
-        RestMap.__init__(self, connect, "%s/networks" % (resource),
+        super(VirtualNetworks, self).__init__(connect,
+            "%s/networks" % (resource),
             lambda conn, data: VirtualNetwork(conn, resource, data['id'], data))

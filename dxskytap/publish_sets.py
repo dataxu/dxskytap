@@ -27,8 +27,8 @@ from dxskytap.restobject import RestMap, RestObject, RestAttribute
 
 class PublishSetVM(RestObject):
     def __init__(self, connect, res, initial_data, vm_cls):
-        RestObject.__init__(self, connect, res, initial_data, can_delete=True,
-            is_full=True, can_refresh=False)
+        super(PublishSetVM, self).__init__(connect, res, initial_data,
+            can_delete=True, is_full=True, can_refresh=False)
         self._vm_cls = vm_cls
 
         
@@ -46,7 +46,7 @@ class PublishSetVM(RestObject):
     
 class PublishSet(RestObject):
     def __init__(self, connect, res, uid, intial_data, vm_cls):
-        RestObject.__init__(self, connect, 
+        super(PublishSet, self).__init__(connect, 
             "%s/publish_sets/%s" % (res, uid), intial_data)
         self._vm_cls = vm_cls
         
@@ -67,7 +67,8 @@ class PublishSet(RestObject):
 class PublishSets(RestMap):
 
     def __init__(self, connect, resource, vm_class):
-        RestMap.__init__(self, connect, "%s/publish_sets" % (resource),
+        super(PublishSets, self).__init__(connect,
+            "%s/publish_sets" % (resource),
             lambda conn, data: PublishSet(conn, resource, data['id'], data,
                 vm_class))
         self._base_resource = resource

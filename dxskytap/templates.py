@@ -46,7 +46,7 @@ class Template(AssignableObject):
     """
     
     def __init__(self, connect, uid, intial_data, configuration_cls, user_cls):
-        AssignableObject.__init__(self, connect, "templates/%s" % (uid),
+        super(Template, self).__init__(connect, "templates/%s" % (uid),
             intial_data, "templates", user_cls)
         self._configuration_cls = configuration_cls
         
@@ -90,7 +90,7 @@ class Template(AssignableObject):
 class Templates(RestMap):
 
     def __init__(self, connect, configuration_cls, user_cls):
-        RestMap.__init__(self, connect, "templates",
+        super(Templates, self).__init__(connect, "templates",
             lambda conn, data: Template(conn, data['id'], data, 
                 configuration_cls, user_cls))
         self._configuration_cls = configuration_cls

@@ -115,7 +115,8 @@ class Connect(object):
         full_path = u"/".join(parts)
         return urlparse.urljoin(self.base_url, full_path)
 
-    def request(self, url, method, body=None, headers=None):
+    def request(self, url, method, body=None, headers=None,
+                accept_type='application/json'):
         """
         HTTP request. Default handling uses 'application/json' for
         request/response, but this can be overridden in the headers.
@@ -129,7 +130,7 @@ class Connect(object):
         if method in ["post", "put"]:
             headers['Content-Type'] = 'application/json'
         
-        headers['Accept'] = 'application/json'
+        headers['Accept'] = accept_type
 
         if isinstance(body, dict):
             text_body = simplejson.dumps(body)
@@ -141,7 +142,7 @@ class Connect(object):
         else:
             headers['Content-Length'] = '0'
 
-        return self._perform_request(url, method, text_body, headers)
+        return self._perform_request(url, method, text_body, headers, accept_type)
 
     def _log_http_request(self, url, method, body, headers):
         """
@@ -169,7 +170,7 @@ class Connect(object):
             body_txt = re.escape(body)
         self.logger.debug("%s_body: %s", msg, body_txt)
 
-    def _perform_request(self, url, method, body, headers):
+    def _perform_request(self, url, method, body, headers, accept_type):
         """
         Internal method for performing the http request after
         Connect.request() generates the final url and header.
@@ -205,23 +206,26 @@ class Connect(object):
         content_txt = content.decode('UTF-8')
         if self.logger.isEnabledFor(logging.DEBUG):
             self._log_http_response(resp, content_txt)
+        
+        ret_data = None
+        if accept_type != 'application/json':
+            ret_data = content_txt
+        else:
+            if(content_txt.strip() != ''):
+                try:
+                    ret_data = simplejson.loads(content_txt)
+                except ValueError:
+                    ret_data = content_txt
 
-        ret_data = {}
-        if(content_txt.strip() != ''):
-            try:
-                ret_data = simplejson.loads(content_txt)
-            except ValueError:
-                ret_data = content_txt
+            accepted_values = ['', False, None, 'None']
+            if(isinstance(ret_data, dict) and 
+                ret_data.get('errors','') not in accepted_values):
 
-        accepted_values = ['', False, None, 'None']
-        if(isinstance(ret_data, dict) and 
-            ret_data.get('errors','') not in accepted_values):
+                raise ValueError(ret_data['errors'])
+            elif(isinstance(ret_data, dict) and 
+                ret_data.get('error','') not in accepted_values):
 
-            raise ValueError(ret_data['errors'])
-        elif(isinstance(ret_data, dict) and 
-            ret_data.get('error','') not in accepted_values):
-
-            raise ValueError(ret_data['error'])
+                raise ValueError(ret_data['error'])
         return ret_data
 
     def get(self, resource, args = None, body = None,  headers=None):

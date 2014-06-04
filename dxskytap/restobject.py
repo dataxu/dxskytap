@@ -296,6 +296,21 @@ class RestMap(RestBase):
                 result.append(obj)
         return result
 
+    def get_by_id(self, uid):
+        """
+        The Skytap API can be used to list resources the current 
+        user owns and the resources for projects the user belongs
+        to. This works for most users, but admins can access all
+        resources regardless of ownership/projects. The Skytap
+        API for listing resources is bound to the owner/project
+        constraint, so that admin can't use this class to iterate
+        over all resources. However, if the admin knows the uid
+        for the Skytap resource, this method can be used to
+        access the Skytap object.
+        """
+        item = { 'id': uid }
+        return self._new_func(self._connect, item)
+
 class RestAttribute(object):
     "A descriptor used to get/set attributes in the REST API"
     

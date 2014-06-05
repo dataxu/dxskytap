@@ -37,6 +37,7 @@ from dxskytap.configurations import Configurations, Configuration
 from dxskytap.templates import Templates, Template
 from dxskytap.vpns import VPNs
 from dxskytap.projects import Projects
+from dxskytap.reports import Reports
 import ConfigParser
 import os
 import sys
@@ -144,3 +145,6 @@ class Skytap(object):
         Skytap Account.
         """
         return VPNs(self.connect)
+
+    def reports(self):
+        return Reports(self.connect)

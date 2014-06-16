@@ -29,9 +29,10 @@ from dxskytap.tags import Notes, Labels
 from dxskytap.publish_sets import PublishSets
 from dxskytap.restobject import RestMap, RestAttribute, SkytapException
 from dxskytap.assignableobject import AssignableObject
+from dxskytap.stateful import StatefulObject
 import time
 
-class Configuration(AssignableObject):
+class Configuration(AssignableObject, StatefulObject):
     """
     Like a template, a configuration is a specification that describes one or more
     virtual machine images, associated resources, and metadata around ownership,
@@ -70,7 +71,6 @@ class Configuration(AssignableObject):
             initial_data, "configurations", user_cls)
         self._template_cls = template_cls
         
-    runstate = RestAttribute('runstate')
     uid = RestAttribute('id', readonly=True)
     name = RestAttribute('name')
     url = RestAttribute('url', readonly=True)
@@ -110,10 +110,6 @@ class Configuration(AssignableObject):
         result = self._connect.post("templates", body=body)
         return self._template_cls(self._connect, result['id'], result,
             Configuration, self._user_cls)
-
-    def check_state(self, states=None):
-        if states is None: return self.runstate != 'busy'
-        else:              return self.runstate in states
 
     def wait_for(self, states=None, check_interval=15, check_limit=20):
         resources = [self]

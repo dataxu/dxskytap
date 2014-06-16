@@ -28,14 +28,14 @@ from dxskytap.interfaces import Interfaces
 from dxskytap.hardware import Hardware
 from dxskytap.tags import Notes, Labels, Credentials
 from dxskytap.publish_sets import PublishSet
+from dxskytap.stateful import StatefulObject
 
-class VirtualMachine(RestObject):
+class VirtualMachine(StatefulObject):
     
     def __init__(self, connect, base_resource, uid, initial_data):
         res = "%s/vms/%s" % (base_resource, uid)
         super(VirtualMachine, self).__init__(connect, res, initial_data)
     
-    runstate = RestAttribute('runstate')
     uid = RestAttribute('id', readonly=True)
     name = RestAttribute('name')
     assetId = RestAttribute('asset_id')
@@ -75,10 +75,6 @@ class VirtualMachine(RestObject):
         return [PublishSet(self._connect, pset[0], pset[1], {}, VirtualMachine) 
             for pset in path_tuples]
     
-    def check_state(self, states=None):
-        if states is None: return self.runstate != 'busy'
-        else:              return self.runstate in states
-
 class VirtualMachines(RestMap):
 
     def __init__(self, connect, resource):

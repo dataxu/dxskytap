@@ -100,8 +100,7 @@ class Skytap(object):
                 raise Exception("No login credentials specified "
                     "in ~/.skytap_config")
         path = os.path.dirname(sys.modules[Skytap.__module__].__file__)
-        ca_certs = os.path.join(path, "skytapCert.pem")
-        self.connect = Connect(SKYTAP_URL, ca_certs, username, password,
+        self.connect = Connect(SKYTAP_URL, None, username, password,
             request_timeout)
     
     def assets(self):

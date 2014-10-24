@@ -82,7 +82,8 @@ class UsageReport(RestObject):
         """
         contents = self._connect.request(self.url, 'GET',
                accept_type='application/csv')
-        return csv.DictReader(contents.split('\n'))
+        cleanData = contents.encode('ascii', 'ignore')
+        return csv.DictReader(cleanData.split('\n'))
 
 class Reports(object):
     """

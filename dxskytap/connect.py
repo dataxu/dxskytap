@@ -95,7 +95,10 @@ class Connect(object):
         
         self._request_timeout = request_timeout
         # Create Http class with support for Digest HTTP Authentication
-        self.http = httplib2.Http(cache=None, ca_certs=ca_certs)
+        self.http = httplib2.Http(cache=None,
+            disable_ssl_certificate_validation=True,
+            ca_certs=ca_certs)
+
         self.http.follow_all_redirects = True
         
         self.logger = logging.getLogger('dxskytap')

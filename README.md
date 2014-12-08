@@ -1,10 +1,10 @@
 ===========================
-DataXu Skytap API Utilities
+Skytap API Client
 ===========================
 
-This module contains utilities for accessing SkyTap's available API
-functions. This code was originally developed at [DataXu](http://www.dataxu.com)
-and released as open source.
+This module contains a client library for accessing
+[Skytap](http://www.skytap.com)'s cloud API . This code was originally
+developed at [DataXu](http://www.dataxu.com) and released as open source.
 
 Code Style
 ==========

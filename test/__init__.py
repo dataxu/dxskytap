@@ -1,1 +1,2 @@
-__all__ = ["configurations_test", "data_test", "templates_test", "vms_test"]
+__all__ = ["configurations_test", "data_test", "templates_test", "vms_test",
+           "disk_test"]

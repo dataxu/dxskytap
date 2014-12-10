@@ -5,6 +5,7 @@ import test.data_test
 import test.templates_test
 import test.tunnels_test
 import test.vms_test
+import test.disk_test
 
 def suite():
     suites = []
@@ -13,6 +14,7 @@ def suite():
     suites.append(test.templates_test.suite())
     suites.append(test.tunnels_test.suite())
     suites.append(test.vms_test.suite())
+    suites.append(test.disk_test.suite())
     suite = unittest.TestSuite(suites)
     return suite
 

@@ -19,8 +19,6 @@ class TestDisk(unittest.TestCase):
         self.assertTrue(template is not None, "Unable to get template 294385")
         self.config1 = template.create_configuration()
         self.config1.wait_for()
-        self.config2 = template.create_configuration()
-        self.config2.wait_for()
 
     def test_createNewDisk(self):
         vm1 = self.config1.vms().values()[0]
@@ -31,26 +29,24 @@ class TestDisk(unittest.TestCase):
         vm1.refresh()
         self.assertEqual(len(vm1.hardware().disks()), 2,
             "Expected 2 disks in vm")
-        config1.delete()
 
     def test_DeleteDisk(self):
-        vm1 = self.config2.vms().values()[0]
+        vm1 = self.config1.vms().values()[0]
         self.assertEqual(len(vm1.hardware().disks()), 1,
             "Expected only 1 initial disk in vm")
         vm1.hardware().addDisk(8192)
-        self.config2.wait_for()
+        self.config1.wait_for()
         vm1.refresh()
         self.assertEqual(len(vm1.hardware().disks()), 2,
             "Expected 2 disks in vm")
         vm1.hardware().disks()[1].delete()
-        self.config2.wait_for()
+        self.config1.wait_for()
         vm1.refresh()
         self.assertEqual(len(vm1.hardware().disks()), 1,
             "Expected 1 disks in vm")
 
     def tearDown(self):
         self.config1.delete()
-        self.config2.delete()
 
 def suite():
     suite = unittest.TestSuite()

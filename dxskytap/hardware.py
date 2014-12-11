@@ -41,16 +41,30 @@ class Hardware(RestObject):
     vnc_keymap = RestAttribute("vnc_keymap", readonly=True)
 
     def disks(self):
-        return [Disk(self._connect, self._resource, disk, self)
+        return [Disk(self._connect, self._resource, disk)
             for disk in self.alldata()['disks']]
-    
+
+    def addDisk(self, size):
+        msg = { "hardware": { "disks":
+                {"new": [ size ] }
+              } }
+        self._connect.put(self._resource, body=msg)
+
 class Disk(RestObject):
-    def __init__(self, connect, res, initial_data, parent):
+    def __init__(self, connect, res, initial_data):
         super(Disk, self).__init__(connect, res, initial_data,
-            is_full=True, parent=parent, parent_attr="disks")
-    
-    controller = RestAttribute("controller", readonly=True)
-    uid = RestAttribute("id", readonly=True)
-    lun = RestAttribute("lun", readonly=True)
-    size = RestAttribute("size", readonly=True)
-    disk_type = RestAttribute("type", readonly=True)
+            is_full=True, can_refresh=False)
+
+    controller = RestAttribute('controller', readonly=True)
+    uid = RestAttribute('id', readonly=True)
+    lun = RestAttribute('lun', readonly=True)
+    size = RestAttribute('size', readonly=True)
+    disk_type = RestAttribute('type', readonly=True)
+
+    def delete(self):
+        msg = { 'hardware': { 'disks': { 'existing': { } } } }
+        msg['hardware']['disks']['existing'][self.uid] = {
+            'id': self.uid,
+            'size': None }
+        self._connect.put(self._resource, body=msg)
+        self._active = False

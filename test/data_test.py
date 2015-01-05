@@ -89,6 +89,14 @@ class TestData(unittest.TestCase):
         data = interface.alldata()
         self.assertTrue(isinstance(data, dict), "Interface.alldata didn't return a dict")
 
+    def test_company_quota(self):
+        company_object = root.company()
+        company_quota_object = company_object.company_quota_request()
+        #using an example that should always be present and should always have a positive int value
+        data = company_quota_object.request_resource_by_id('concurrent_svms', 'limit')
+        self.assertTrue(isinstance(data, int), "Company.request_resource_by_id didn't return an int")
+        self.assertTrue((data >= 0), "Company quota didn't return an expected number")
+
 def setUpModule():
     global root, configurations, config
     root = Skytap()
@@ -119,5 +127,6 @@ def suite():
     suite.addTest(TestData('test_vmsLevel3'))
     suite.addTest(TestData('test_vmLevel4'))
     suite.addTest(TestData('test_interfacesLevel5'))
-    suite.addTest(TestData('test_interfacesLevel5'))
+    suite.addTest(TestData('test_interfaceLevel6'))
+    suite.addTest(TestData('test_company_quota'))
     return suite

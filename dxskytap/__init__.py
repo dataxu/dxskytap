@@ -38,6 +38,7 @@ from dxskytap.templates import Templates, Template
 from dxskytap.vpns import VPNs
 from dxskytap.projects import Projects
 from dxskytap.reports import Reports
+from dxskytap.company import Company
 import ConfigParser
 import os
 import sys
@@ -116,6 +117,12 @@ class Skytap(object):
         Skytap Account. 
         """
         return Users(self.connect)
+
+    def company(self):
+        """
+        This function returns company quota numbers
+        """
+        return Company(self.connect)
     
     def projects(self):
         """

@@ -23,44 +23,53 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from dxskytap.restobject import RestObject
+from dxskytap.restobject import RestObject, RestAttribute
 
 class Company(RestObject):
     def __init__(self, connect):
         super(Company, self).__init__(connect, "company/quotas")
+        
+    def refresh(self):
+        unprocessed = self._connect.get(self._resource)
+        self.data = {}
+        for group in unprocessed:
+            self.data[group['id']] = group
+        self._is_full = True
 
-    def company_quota_request(self):
-        return Company_Quota(self._connect, self._resource, self.alldata(), self)
+    def concurrent_svms(self):
+        return CompanyResourceLimit(self._connect, self._resource,
+               self, 'concurrent_svms')
+
+    def concurrent_vms(self):
+        return CompanyResourceLimit(self._connect, self._resource,
+               self, 'concurrent_vms')
+
+    def concurrent_storage_size(self):
+        return CompanyResourceLimit(self._connect, self._resource,
+               self, 'concurrent_storage_size')
+
+    def cumulative_svms(self):
+        return CompanyResourceLimit(self._connect, self._resource,
+               self, 'cumulative_svms')
+
+    def concurrent_public_ips(self):
+        return CompanyResourceLimit(self._connect, self._resource,
+               self, 'concurrent_public_ips')
+
+    def concurrent_networks(self):
+        return CompanyResourceLimit(self._connect, self._resource,
+               self, 'concurrent_networks')
+
+class CompanyResourceLimit(RestObject):
+    def __init__(self, connect, res, parent, attrname):
+        super(CompanyResourceLimit, self).__init__(connect, res,
+            parent.alldata().get(attrname),
+            is_full=True, parent=parent, parent_attr=attrname)
+
+    quota_type = RestAttribute('quota_type', readonly=True)
+    units = RestAttribute('units', readonly=True)
+    limit = RestAttribute('limit', readonly=True)
+    usage = RestAttribute('subscription', readonly=True)
+    max_limit = RestAttribute('max_limit', readonly=True)
 
 
-class Company_Quota(RestObject):
-    def __init__(self, connect, res, initial_data, parent):
-        super(Company_Quota, self).__init__(connect, res, initial_data, is_full=True)
-
-        self.list_of_resources_with_limits = ('concurrent_svms', 'concurrent_vms', 'concurrent_storage_size',
-        'cumulative_svms', 'concurrent_public_ips', 'concurrent_networks')
-        self.quota_fields = ('quota_type', 'units', 'limit', 'usage', 'subscription', 'max_limit')
-        self.company_quota_data_structure = {}
-
-        for group in initial_data:
-            tmp_dict = {}
-            for key, value in group.iteritems():
-                tmp_dict[key] = value
-            self.company_quota_data_structure[group['id']] = tmp_dict 
-
-    def request_resource_by_id(self, in_id, in_quota_field):
-
-        return_value = None
-
-        if in_id not in self.list_of_resources_with_limits:
-            print "Invalid resource type: %s " % str(in_id)
-            raise Exception("Unknown resource type for finding a limit")
-        if in_quota_field not in self.quota_fields:
-            print "Invalid quota field: %s " % str(in_quota_field)
-            raise Exception("Unknown quota field")
-
-        get_value = self.company_quota_data_structure[in_id][in_quota_field]
-        if get_value is not None:
-            return_value = get_value
-
-        return return_value

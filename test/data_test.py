@@ -91,9 +91,7 @@ class TestData(unittest.TestCase):
 
     def test_company_quota(self):
         company_object = root.company()
-        company_quota_object = company_object.company_quota_request()
-        #using an example that should always be present and should always have a positive int value
-        data = company_quota_object.request_resource_by_id('concurrent_svms', 'limit')
+        data = company_object.concurrent_svms().limit
         self.assertTrue(isinstance(data, int), "Company.request_resource_by_id didn't return an int")
         self.assertTrue((data >= 0), "Company quota didn't return an expected number")
 

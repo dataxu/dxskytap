@@ -24,6 +24,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from dxskytap.restobject import RestObject, RestAttribute, RestBoolAttribute
+from dxskytap.connect import SkytapException
 import csv
 import time
 

@@ -39,11 +39,14 @@ try:
     import json as simplejson
 except ImportError:
     import simplejson
+try:
+   from urllib import quote, urlencode
+   from urlparse import urlsplit, urljoin
+except ImportError:
+   from urllib.parse import quote, urlencode, urlsplit, urljoin
 
 from base64 import b64encode
 import httplib2
-import urlparse
-import urllib
 import signal
 import re
 import logging
@@ -85,7 +88,7 @@ class Connect(object):
         :request_timeout: throw a TimeoutException if Skytap doesn't respond
             within this window.
         """
-        (scheme, host, path, _, _) = urlparse.urlsplit(url)
+        (scheme, host, path, _, _) = urlsplit(url)
             
         self.base_url = u"%s://%s" % (scheme, host)
         self.path = path
@@ -110,13 +113,13 @@ class Connect(object):
         This base path will be prepended to the URL if the base path
         exists.
         """
-        path = urllib.quote(resource)
+        path = quote(resource)
         if args:
-            path += u"?" + urllib.urlencode(args)
+            path += u"?" + urlencode(args)
 
         parts = [x for x in [self.path, path] if x is not None]
         full_path = u"/".join(parts)
-        return urlparse.urljoin(self.base_url, full_path)
+        return urljoin(self.base_url, full_path)
 
     def request(self, url, method, body=None, headers=None,
                 accept_type='application/json'):
@@ -126,7 +129,8 @@ class Connect(object):
         """
         if headers is None:
             headers = {}
-        encoded_auth = b64encode('%s:%s' % (self.username, self.password))
+        auth_str = '%s:%s' % (self.username, self.password)
+        encoded_auth = b64encode(auth_str.encode('utf-8')).decode('utf-8')
         headers['User-Agent'] = 'Basic Agent'
         headers['Authorization'] = 'Basic %s' % (encoded_auth)
         

@@ -24,7 +24,10 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from dxskytap.restobject import RestObject, RestAttribute
-import urlparse
+try:
+   import urllib.parse as urlparse
+except ImportError:
+   import urlparse
 
 class AssignableObject(RestObject):
     """

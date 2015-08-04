@@ -24,7 +24,7 @@ class TestProjects(unittest.TestCase):
         new_project = self.root.projects().create_project('test_project_2')
         self.template.add_to_project(new_project)
         templates = new_project.templates()
-        temp = filter(lambda x: x.uid == self.template.uid, templates)
+        temp = [x for x in templates if x.uid == self.template.uid]
         self.assertEquals(len(temp), 1)
         self.assertTrue(isinstance(temp[0], Template))
         new_project.delete()
@@ -33,7 +33,7 @@ class TestProjects(unittest.TestCase):
         new_project = self.root.projects().create_project('test_project_3')
         self.config.add_to_project(new_project)
         configurations = new_project.configurations()
-        temp = filter(lambda x: x.uid == self.config.uid, configurations)
+        temp = [x for x in configurations if x.uid == self.config.uid]
         self.assertEquals(len(temp), 1)
         self.assertTrue(isinstance(temp[0], Configuration))
         new_project.delete()

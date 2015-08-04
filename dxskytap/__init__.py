@@ -39,7 +39,12 @@ from dxskytap.vpns import VPNs
 from dxskytap.projects import Projects
 from dxskytap.reports import Reports
 from dxskytap.company import Company
-import ConfigParser
+
+try:
+   from ConfigParser import ConfigParser
+except ImportError:
+   from configparser import ConfigParser
+
 import os
 import sys
 from dxskytap.connect import Connect   
@@ -89,7 +94,7 @@ class Skytap(object):
             within this window. Default: 5 minutes
         '''
         if username is None and password is None:
-            config = ConfigParser.ConfigParser()
+            config = ConfigParser()
             filepath = os.path.expanduser(os.getenv('SKYTAP_CONFIG',
                 DEFAULT_SKYTAP_CONFIG_FILE))
             config.read(filepath)

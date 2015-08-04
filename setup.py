@@ -24,7 +24,7 @@ developed at [DataXu](http://www.dataxu.com) and released as open source.
     tests_require=['nose','coverage'],
     test_suite='test.all',
     url='http://www.dataxu.com',
-    version='1.0.0-SNAPSHOT',
+    version='1.1.0',
     keywords='skytap cloud client rest api development',
     classifiers=[
         'Development Status :: 5 - Production/Stable',

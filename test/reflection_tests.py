@@ -11,7 +11,11 @@ in the basic tree traversal process.
 from dxskytap import Skytap
 import inspect
 import re
-import Queue
+try:
+    import Queue as queue
+except ImportError:
+    import queue
+
 import logging
 
 ignoreAttrs = ['delete', '_newFunc','create_template','create_configuration',
@@ -56,7 +60,7 @@ def handleFunction(func, path, objs, exploredTypes, logger):
             
 def testAPI():
     obj = Skytap()
-    objs = Queue.Queue()
+    objs = queue.Queue()
     objs.put((obj, ""))
     exploredTypes = ignoreTypes[:]
     logger = logging.getLogger('dxskytap.test')

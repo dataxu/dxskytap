@@ -20,7 +20,7 @@ developed at [DataXu](http://www.dataxu.com) and released as open source.
     license='BSD-new',
     packages=['dxskytap'],
     package_data={'dxskytap': ['*.pem']},
-    install_requires=['httplib2 >= 0.8','pexpect >= 2.4'],
+    install_requires=['httplib2 >= 0.8, < 0.10','pexpect >= 2.4'],
     tests_require=['nose','coverage'],
     test_suite='test.all',
     url='http://www.dataxu.com',

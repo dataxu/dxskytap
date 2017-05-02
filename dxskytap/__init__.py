@@ -66,7 +66,7 @@ class Skytap(object):
     through the skytap object.
     '''
 
-    def __init__(self, username=None, password=None, request_timeout=300):
+    def __init__(self, username=None, password=None, request_timeout=(9.1, 300)):
         '''
         Constructor
         

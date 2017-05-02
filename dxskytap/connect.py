@@ -31,36 +31,30 @@ Classes:
 
 Exceptions:
  - SkytapException
- - TimeoutException
  - NoResponseException
 '''
 
+import urllib3.contrib.pyopenssl
+urllib3.contrib.pyopenssl.inject_into_urllib3()
+
+import logging
+from re import escape
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.poolmanager import PoolManager
+from requests.exceptions import Timeout
+import ssl
+from time import sleep
+
 try:
-    import json as simplejson
-except ImportError:
-    import simplejson
-try:
-   from urllib import quote, urlencode
    from urlparse import urlsplit, urljoin
 except ImportError:
-   from urllib.parse import quote, urlencode, urlsplit, urljoin
+   from urllib.parse import urlsplit, urljoin
 
-from base64 import b64encode
-import httplib2
-import signal
-import re
-import logging
 
 class SkytapException(Exception):
     """
     Base class for Exceptions thrown by dxskytap library.
-    """
-    pass
-
-class TimeoutException(SkytapException):
-    """
-    Exception thrown when http request doesn't respond within 
-    REQUEST_TIMEOUT limit.
     """
     pass
 
@@ -70,6 +64,28 @@ class NoResponseException(SkytapException):
     message is available.
     """
     pass
+
+class SecureAdapter(HTTPAdapter):
+    """
+    Define constructor for passing root certificate object
+    """
+    def __init__(self, ca_certs=None):
+        self.ca_certs = ca_certs
+        super(SecureAdapter, self).__init__()
+
+    """
+    HTTP Adapter for requests module to force use of TLS v1.2
+    """
+    def init_poolmanager(self, connections, maxsize, block=False):
+        """
+        initialize connection pool for HTTP
+        """
+        self.poolmanager = PoolManager(num_pools=connections,
+                                   maxsize=maxsize,
+                                   block=block,
+                                   ssl_version=ssl.PROTOCOL_TLSv1_2,
+                                   cert_reqs='CERT_REQUIRED',
+                                   ca_certs=self.ca_certs)
 
 class Connect(object):
     """
@@ -85,7 +101,7 @@ class Connect(object):
         :ca_certs: certificates used for authentication
         :username: authenticating username
         :password: username's password
-        :request_timeout: throw a TimeoutException if Skytap doesn't respond
+        :request_timeout: throw a NoResponseException if Skytap doesn't respond
             within this window.
         """
         (scheme, host, path, _, _) = urlsplit(url)
@@ -94,45 +110,28 @@ class Connect(object):
         self.path = path
 
         self.username = username
-        self.password = password
         
         self._request_timeout = request_timeout
         # Create Http class with support for Digest HTTP Authentication
-        self.http = httplib2.Http(cache=None,
-            disable_ssl_certificate_validation=True,
-            ca_certs=ca_certs)
-
-        self.http.follow_all_redirects = True
-        
+        self.session = requests.Session()
+        self.session.mount('https://', SecureAdapter(ca_certs))        
+        self.session.auth = (username, password)
+ 
         self.logger = logging.getLogger('dxskytap')
 
-    def _makeurl(self, resource, args):
-        """
-        Generate a URL from the resource path and HTTP POST arguments.
-        Additionally, a base path maybe defined for this Connection.
-        This base path will be prepended to the URL if the base path
-        exists.
-        """
-        path = quote(resource)
-        if args:
-            path += u"?" + urlencode(args)
+    def _makeurl(self, resource):
+        return urljoin(self.base_url, resource)
 
-        parts = [x for x in [self.path, path] if x is not None]
-        full_path = u"/".join(parts)
-        return urljoin(self.base_url, full_path)
-
-    def request(self, url, method, body=None, headers=None,
+    def request(self, url, method, params, body=None, headers=None,
                 accept_type='application/json'):
         """
         HTTP request. Default handling uses 'application/json' for
         request/response, but this can be overridden in the headers.
         """
+        data = None
+        json = None
         if headers is None:
             headers = {}
-        auth_str = '%s:%s' % (self.username, self.password)
-        encoded_auth = b64encode(auth_str.encode('utf-8')).decode('utf-8')
-        headers['User-Agent'] = 'Basic Agent'
-        headers['Authorization'] = 'Basic %s' % (encoded_auth)
         
         if method in ["post", "put"]:
             headers['Content-Type'] = 'application/json'
@@ -140,16 +139,11 @@ class Connect(object):
         headers['Accept'] = accept_type
 
         if isinstance(body, dict):
-            text_body = simplejson.dumps(body)
+            json = body
         else:
-            text_body = body
+            data = body
 
-        if body:
-            headers['Content-Length'] = str(len(text_body))
-        else:
-            headers['Content-Length'] = '0'
-
-        return self._perform_request(url, method, text_body, headers, accept_type)
+        return self._perform_request(url, method, params, data, json, headers, accept_type)
 
     def _log_http_request(self, url, method, body, headers):
         """
@@ -174,55 +168,51 @@ class Connect(object):
         if body is None:
             body_txt =  ''
         else:
-            body_txt = re.escape(body)
+            body_txt = escape(body)
         self.logger.debug("%s_body: %s", msg, body_txt)
 
-    def _perform_request(self, url, method, body, headers, accept_type):
+    def _perform_request(self, url, method, params, data, json, headers, accept_type):
         """
         Internal method for performing the http request after
         Connect.request() generates the final url and header.
         """
-
-        def _request_timeout_handler(_arg1, _arg2):
-            """
-            Internal function for handling the timeout signal
-            around the http.request call.
-            """
-            raise TimeoutException("Timed out!")
-        
         if self.logger.isEnabledFor(logging.DEBUG):
             self._log_http_request(url, method, body, headers)
 
-        tries_remaining = 3
+        tries_remaining = 5
         resp = None
         while resp is None and tries_remaining > 0:
             tries_remaining = tries_remaining - 1
             try:
-                signal.signal(signal.SIGALRM, _request_timeout_handler)
-                signal.alarm(self._request_timeout)
-                resp, content = self.http.request(url, method.upper(),
-                    body=body, headers=headers)
-                signal.alarm(0)
-            except TimeoutException:
+                resp = self.session.request(
+                    method=method.upper(),
+                    url=url,
+                    params=params,
+                    data=data,
+                    json=json,
+                    headers=headers,
+                    timeout=self._request_timeout)
+                if resp.status_code in (423, 429):
+                    wait_time = 10
+                    if 'Retry-After' in resp.headers:
+                        wait_time = int(resp.headers['Retry-After'])
+                    sleep(wait_time)    
+            except Timeout:
                 resp = None
 
         if resp is None:
             raise NoResponseException("Unable to get a response in"
                 "a reasonable amount of time.")
         
-        content_txt = content.decode('UTF-8')
         if self.logger.isEnabledFor(logging.DEBUG):
-            self._log_http_response(resp, content_txt)
+            self._log_http_response(resp.headers, resp.text)
         
         ret_data = None
         if accept_type != 'application/json':
-            ret_data = content_txt
+            ret_data = resp.text
         else:
-            if(content_txt.strip() != ''):
-                try:
-                    ret_data = simplejson.loads(content_txt)
-                except ValueError:
-                    ret_data = content_txt
+            if(resp.text.strip() != ''):
+                ret_data = resp.json()
 
             accepted_values = ['', False, None, 'None']
             if(isinstance(ret_data, dict) and 
@@ -239,26 +229,26 @@ class Connect(object):
         """
         HTTP GET Request
         """
-        return self.request(self._makeurl(resource, args),
-            "get", body, headers)
+        return self.request(self._makeurl(resource), params=args,
+            method="get", body=body, headers=headers)
     
     def post(self, resource, args = None, body = None, headers=None):
         """
         HTTP POST Request
         """
-        return self.request(self._makeurl(resource, args),
-            "post", body, headers)
+        return self.request(self._makeurl(resource), params=args,
+            method="post", body=body, headers=headers)
 
     def put(self, resource, args = None, body = None, headers=None):
         """
         HTTP PUT Request
         """
-        return self.request(self._makeurl(resource, args),
-            "put", body, headers)
+        return self.request(self._makeurl(resource), params=args,
+            method="put", body=body, headers=headers)
     
     def delete(self, resource, args = None, body = None, headers=None):
         """
         HTTP DELETE Request
         """
-        return self.request(self._makeurl(resource, args),
-            "delete", body, headers)
+        return self.request(self._makeurl(resource), params=args,
+            method="delete", body=body, headers=headers)

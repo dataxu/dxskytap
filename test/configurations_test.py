@@ -15,17 +15,17 @@ class TestConfigurations(unittest.TestCase):
         self.root = Skytap()
         """configurations = Configurations(username, password)"""
         self.configurations = self.root.configurations()
-        template = self.root.templates()['294385']
-        self.assertTrue(template is not None, "Unable to get template 294385")
-        config = template.create_configuration()
-        config.wait_for()
-        config.name = 'test config'
+        self.template = self.root.templates()['294385']
+        self.assertTrue(self.template is not None, "Unable to get template 294385")
 
     def test_lookupNotExist(self):
         result_list = self.configurations['123456']
         self.assertTrue(result_list is None, "Lookup of config that doesn't exist should return None")
 
     def test_getAllConfigurations(self):
+        config = self.template.create_configuration()
+        config.wait_for()
+        config.name = 'test config'
         self.assertTrue(len(self.configurations) > 0, "No configurations for this user")
         inVar = False
         for r in self.configurations.values():
@@ -34,6 +34,9 @@ class TestConfigurations(unittest.TestCase):
         self.assertTrue(inVar, "Didn't traverse any configurations")
     
     def test_getConfigurationByName(self):
+        config = self.template.create_configuration()
+        config.wait_for()
+        config.name = 'test config'
         result_list = self.configurations.get_by_name('test config')
         self.assertTrue(len(result_list) == 1, "Received %s configs from lookup of 'test config'" % (len(result_list)))
         count = 0
@@ -43,27 +46,31 @@ class TestConfigurations(unittest.TestCase):
         self.assertTrue(count == 1, "Didn't traverse any configurations")
     
     def test_startConfiguration(self):
-        template = self.root.templates()['294385']
-        self.assertTrue(template is not None, "Unable to get template 294385")
-        config1 = template.create_configuration()
+        self.assertTrue(self.template is not None, "Unable to get template 294385")
+        config1 = self.template.create_configuration()
         config1.wait_for() 
         newState = 'running'
+        config1.name = 'test_config'
         config1.runstate = newState
         self.assertTrue( config1.runstate != newState, "Verify state doesn't change immediately")
         config1.wait_for()
         config2 = self.configurations[config1.uid]
         self.assertTrue(config2.runstate == newState, "Configuration state not changed to %s" % (newState))
-        config1.delete()
 
     def test_createAndDeleteConfiguration(self):
         template = self.root.templates()['294385']
         self.assertTrue(template is not None, "Unable to get template 294385")
         config = template.create_configuration()
+        config.name = 'test_config'
         uid = config.uid
         self.assertTrue(config is not None, "Unable to create new config")
         c1 = self.configurations[uid]
         self.assertTrue(c1 is not None and c1.uid == uid, "Unable to find config for delete test")
-        c1.delete()
+        try:
+            c1.delete()
+        except ValueError:
+            time.sleep(30)
+            c1.delete()
         time.sleep(60)
         self.configurations.refresh()
         c2 = self.configurations[uid]
@@ -76,15 +83,19 @@ class TestConfigurations(unittest.TestCase):
         self.assertEqual(len(config.vms().values()), 1, "Config doesn't have right number of vms before merging template in")
         self.assertTrue(config is not None, "Unable to create new config")
         config.wait_for()
+        config.name = 'test_config'
         config.merge_template(template.uid)
         config.wait_for()
         self.assertEqual(len(config.vms().values()), 2, "Config doesn't have right number of vms after merging template in")
-        config.delete()
 
     def tearDown(self):
         result_list = self.configurations.get_by_name('test config')
         if(len(result_list) == 1):
-            result_list[0].delete()
+            try:
+                result_list[0].delete()
+            except ValueError:
+                time.sleep(30)
+                result_list[0].delete()
 
 def suite():
     suite = unittest.TestSuite()

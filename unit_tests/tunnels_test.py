@@ -1,7 +1,7 @@
 """
 Run from the dxskytap root directory (../)
 
-$ python -m test.tunnels_test
+$ python -m unit_tests.tunnels_test
 """
 
 from dxskytap import Skytap

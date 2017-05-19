@@ -83,11 +83,12 @@ class UsageReport(RestObject):
         """
         contents = self._connect.request(self.url, 'GET',
                accept_type='application/csv')
-        cleanData = contents.encode('ascii', 'ignore')
-        return csv.DictReader(cleanData.split('\n'))
+        clean_data = contents.encode('ascii', 'ignore')
+        return csv.DictReader(clean_data.split('\n'))
 
 class Reports(object):
     """
+    Skytap adhoc report generating service.
     """
     def __init__(self, connect):
         self._connect = connect

@@ -41,11 +41,13 @@ class VPN(RestObject):
     phase_1_encryption_algorithm = RestAttribute('phase_1_encryption_algorithm')
     phase_1_hash_algorithm = RestAttribute('phase_1_hash_algorithm')
     phase_1_sa_lifetime = RestAttribute('phase_1_sa_lifetime')
-    phase_2_authentication_algorithm = RestAttribute(
+    # pylint: disable=C0103
+    phase_2_authenticatioDn_algorithm = RestAttribute(
         'phase_2_authentication_algorithm')
     phase_2_encryption_algorithm = RestAttribute('phase_2_encryption_algorithm')
     phase_2_perfect_forward_secrecy = RestAttribute(
         'phase_2_perfect_forward_secrecy')
+    # pylint: enable=C0103
     phase_2_pfs_group = RestAttribute('phase_2_pfs_group')
     phase_2_sa_lifetime = RestAttribute('phase_2_sa_lifetime')
     remote_peer_ip = RestAttribute('remote_peer_ip')

@@ -171,7 +171,7 @@ class Connect(object):
             body_txt = escape(body)
         self.logger.debug("%s_body: %s", msg, body_txt)
 
-    def _perform_request(self, url, method, params, data, json, headers, accept_type):
+    def _perform_request(self, url, method, params, body, json, headers, accept_type):
         """
         Internal method for performing the http request after
         Connect.request() generates the final url and header.
@@ -188,7 +188,7 @@ class Connect(object):
                     method=method.upper(),
                     url=url,
                     params=params,
-                    data=data,
+                    data=body,
                     json=json,
                     headers=headers,
                     timeout=self._request_timeout)

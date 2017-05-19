@@ -69,7 +69,9 @@ class Interface(RestObject):
     
     uid = RestAttribute("id", readonly=True)
     hostname = RestAttribute("hostname")
+    # pylint: disable=C0103
     ip = RestAttribute("ip")
+    # pylint: enable=C0103
     mac = RestAttribute("mac")
     network_id = RestAttribute("network_id", readonly=True)
     network_name = RestAttribute("network_name", readonly=True)

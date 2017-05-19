@@ -1,7 +1,7 @@
 """
 Run from the dxskytap root directory (../)
 
-$ python -m test.disk_test
+$ python -m unit_tests.disk_test
 """
 
 from dxskytap import Skytap

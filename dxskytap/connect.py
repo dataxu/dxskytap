@@ -122,7 +122,7 @@ class Connect(object):
     def _makeurl(self, resource):
         return urljoin(self.base_url, resource)
 
-    def request(self, url, method, params, body=None, headers=None,
+    def request(self, url, method, params=None, body=None, headers=None,
                 accept_type='application/json'):
         """
         HTTP request. Default handling uses 'application/json' for

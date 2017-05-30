@@ -95,6 +95,18 @@ class Reports(object):
 
     def generate_usage_report(self, start_date, end_date, resource_type='svms',
             utc=True, region='all', group_by='raw', aggregate_by='none'):
+        """
+        Generate Report for Storage or SVM usage from history data
+        
+        Parameters
+            start_date
+            end_date
+            utc - boolean, if true use UTC time
+            resource_type - 'storage' or 'svms'
+            region - 'all', 'US-East', 'US-West', etc...
+            group_by - 'user', 'group', 'region', or 'raw'
+            aggregate_by - 'month', 'day', 'none'. Must be 'none' if group_by='raw'
+        """
         args = {}
         args['start_date'] = start_date.strftime('%Y/%m/%d %H:%M:%S')
         args['end_date'] = end_date.strftime('%Y/%m/%d %H:%M:%S')

@@ -43,7 +43,6 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.poolmanager import PoolManager
 from requests.exceptions import Timeout
-import ssl
 from time import sleep
 
 try:
@@ -83,7 +82,6 @@ class SecureAdapter(HTTPAdapter):
         self.poolmanager = PoolManager(num_pools=connections,
                                    maxsize=maxsize,
                                    block=block,
-                                   ssl_version=ssl.PROTOCOL_TLSv1_2,
                                    cert_reqs='CERT_REQUIRED',
                                    ca_certs=self.ca_certs)
 

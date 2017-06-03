@@ -21,9 +21,6 @@ if match_obj:
 else:
     raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
 
-with open('README.md') as readme_file:
-    readme = readme_file.read()
-
 class PylintCommand(Command):
     user_options = [
         ('pylint-output=', None, "Output results to a file")]
@@ -61,7 +58,11 @@ setup(
     author='DataXu',
     author_email='rcarey@dataxu.com',
     description='DataXu Utilities for Skytap',
-    long_description=readme,
+    long_description="""
+        This module contains a client library for accessing
+        [Skytap](http://www.skytap.com)'s cloud API . This code was originally
+        developed at [DataXu](http://www.dataxu.com) and released as open source.
+        """,
     license='BSD-new',
     packages=['dxskytap'],
     package_data={'dxskytap': ['*.pem']},
